@@ -1,16 +1,16 @@
 ## **Relational schema:**  
-***User*** (<u>userID</u>, name, address, birthdate, occupation, type, SIN, email, password)  
-***CreditCard*** (<u>cardnumber</u>, <u>expiredate</u>, holdername)  
-***Listing*** (<u>listingID</u>, type, latitude, longitude, postalcode, address, city, country)  
-***Amenity*** (<u>name</u>)  
-***Availability*** (<u>date</u>, <u>listingID</u>, price)  
-***Rating*** (<u>ratingID</u>, rating, comment)  
-***Amenities*** (<u>name</u>, <u>listingID</u>)  
-***TheListings*** (<u>userID</u>, <u>listingID</u>)  
-***PaymentMethod*** (<u>userID</u>, <u>cardnumber</u>, <u>expiredate</u>)  
-***TheBookings*** (<u>listingID</u>, <u>date</u>, <u>userID</u>)  
-***RenterRates*** (<u>renterID</u>, <u>ratingID</u>, <u>hostID</u>, <u>listingID</u>)  
-***HostRates*** (<u>hostID</u>, <u>ratingID</u>, <u>renterID</u>)
+***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, SIN, email, password)  
+***CreditCard*** (<ins>cardnumber</ins>, <ins>expiredate</ins>, holdername)  
+***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
+***Amenity*** (<ins>name</ins>)  
+***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price)  
+***Rating*** (<ins>ratingID</ins>, rating, comment)  
+***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
+***TheListings*** (<ins>userID</ins>, <ins>listingID</ins>)  
+***PaymentMethod*** (<ins>userID</ins>, <ins>cardnumber</ins>, <ins>expiredate</ins>)  
+***TheBookings*** (<ins>listingID</ins>, <ins>date</ins>, <ins>userID</ins>)  
+***RenterRates*** (<ins>renterID</ins>, <ins>ratingID</ins>, <ins>hostID</ins>, <ins>listingID</ins>)  
+***HostRates*** (<ins>hostID</ins>, <ins>ratingID</ins>, <ins>renterID</ins>)
 
 ## **Assumptions Considered:**  
 1. A renter account can have multiple payment method stored.
