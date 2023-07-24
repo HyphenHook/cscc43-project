@@ -2,7 +2,6 @@
 ***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, SIN, email, password)  
 ***CreditCard*** (<ins>cardnumber</ins>, <ins>expiredate</ins>, holdername)  
 ***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
-***Amenity*** (<ins>name</ins>)  
 ***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price)  
 ***Rating*** (<ins>ratingID</ins>, rating, comment)  
 ***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
@@ -51,3 +50,4 @@
   - A shared room
   ```
 5. Comments are part of the Rating
+6. All host listing informations are valid locations.
