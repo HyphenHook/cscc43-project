@@ -51,3 +51,4 @@
   ```
 5. Comments are part of the Rating
 6. All host listing informations are valid locations.
+7. For the reports of the number of bookings in a specific time period, bookings are included inside the time period whenever it has a date inside the period.
