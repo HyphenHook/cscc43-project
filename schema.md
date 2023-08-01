@@ -7,7 +7,7 @@
 ***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
 ***TheListings*** (<ins>userID</ins>, <ins>listingID</ins>)  
 ***PaymentMethod*** (<ins>userID</ins>, <ins>cardnumber</ins>, <ins>expiredate</ins>)  
-***Books*** (<ins>userID</ins>, <ins>bookingID</ins>)
+***Books*** (<ins>userID</ins>, <ins>bookingID</ins>)  
 ***TheBookings*** (<ins>listingID</ins>, <ins>startdate</ins>, <ins>enddate</ins>, <ins>bookingID</ins>, status)  
 ***RenterRates*** (<ins>renterID</ins>, <ins>ratingID</ins>, <ins>hostID</ins>, <ins>listingID</ins>)  
 ***HostRates*** (<ins>hostID</ins>, <ins>ratingID</ins>, <ins>renterID</ins>)
