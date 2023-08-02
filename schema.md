@@ -1,14 +1,14 @@
 ## **Relational schema:**  
-***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, SIN, email, password)  
-***CreditCard*** (<ins>cardnumber</ins>, <ins>expiredate</ins>, holdername)  
+***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, sin, email, password)  
+***CreditCard*** (<ins>cardnumber</ins>, <ins>expirydate</ins>, holdername)  
 ***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
 ***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price, status)  
 ***Rating*** (<ins>ratingID</ins>, rating, comment)  
 ***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
 ***TheListings*** (<ins>userID</ins>, <ins>listingID</ins>)  
-***PaymentMethod*** (<ins>userID</ins>, <ins>cardnumber</ins>, <ins>expiredate</ins>)  
-***Books*** (<ins>userID</ins>, <ins>bookingID</ins>)  
-***TheBookings*** (<ins>listingID</ins>, <ins>startdate</ins>, <ins>enddate</ins>, <ins>bookingID</ins>, status)  
+***PaymentMethod*** (<ins>userID</ins>, <ins>cardnumber</ins>, <ins>expirydate</ins>)  
+***Books*** (<ins>bookingID</ins>, <ins>listingID</ins>, startdate, enddate, status)  
+***TheBookings*** (<ins>bookingID</ins>, <ins>userID</ins>)  
 ***RenterRates*** (<ins>renterID</ins>, <ins>ratingID</ins>, <ins>hostID</ins>, <ins>listingID</ins>)  
 ***HostRates*** (<ins>hostID</ins>, <ins>ratingID</ins>, <ins>renterID</ins>)
 
@@ -54,3 +54,44 @@
 6. All host listing informations are valid locations.
 7. For the reports of the number of bookings in a specific time period, bookings are included inside the time period whenever it has a date inside the period.
 8. The types of status for availability are yes (ready for booking), no (not ready for booking) and book (already booked).
+
+## Normalization - 3NF
+***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, SIN, email, password)  
+Decomposes into:  
+  - ***User*** (<ins>userID</ins>, type, sin, email, password)
+  - ***PersonalInfo*** (<ins>sin</ins>, name, address, birthdate, occupation)  
+
+***CreditCard*** (<ins>cardnumber</ins>, <ins>expirydate</ins>, holdername)  
+Stays unchanged.
+
+***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
+Decomposes into:
+  - ***Listing*** (<ins>listingID</ins>, type, latitude, longitude)  
+  - ***LocationInfo*** (<ins>latitude</ins>, <ins>longitude</ins>, postalcode, address, city, country)  
+
+***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price, status)  
+Stays unchanged.
+
+***Rating*** (<ins>ratingID</ins>, rating, comment)  
+Stays unchanged.
+
+***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
+Stays unchanged.
+
+***TheListings*** (<ins>userID</ins>, <ins>listingID</ins>)  
+Stays unchanged.
+
+***PaymentMethod*** (<ins>userID</ins>, <ins>cardnumber</ins>, <ins>expirydate</ins>)  
+Stays unchanged.
+
+***TheBookings*** (<ins>userID</ins>, <ins>bookingID</ins>)  
+Stays unchanged.
+
+***Books*** (<ins>bookingID</ins>, <ins>listingID</ins>, startdate, enddate, status)  
+Stays unchanged.
+
+***RenterRates*** (<ins>renterID</ins>, <ins>ratingID</ins>, <ins>hostID</ins>, <ins>listingID</ins>)  
+Stays unchanged.
+
+***HostRates*** (<ins>hostID</ins>, <ins>ratingID</ins>, <ins>renterID</ins>)  
+Stays unchanged.
