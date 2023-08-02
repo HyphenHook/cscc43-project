@@ -4,11 +4,21 @@
 
 public class Main {
     public static void main(String[] args) {
-        update up = new update("jdbc:mysql://localhost:3306/project", "root", "204x78y69");
-        up.insertAvailability(1, 2023, 9, 1, 2023, 10, 1, 100);
-        up.checkAvailability(1, 2023, 8, 31, 2023, 9, 1);
-        up.checkAvailability(1, 2023, 9, 2, 2023, 9, 7);
-        up.booking(1, 2023, 9, 2, 2023, 9, 7, 2);
-        up.checkAvailability(1, 2023, 9, 2, 2023, 9, 7);
+        connectionSQL c = new connectionSQL("jdbc:mysql://localhost:3306/project", "root", "204x78y69");
+        Availability a = new Availability();
+        update up = new update();
+        //a.changeAvailability(c, 1, 2023, 9 , 2, 2023, 9, 6, 1);
+        //up.createListing(c, 4, "an entire room", 30.0, 20.0, "M1H3K2", "36 Military Trail", "Scarborough", "Canada");
+        //a.insertAvailability(c, 7, 2023, 9, 1, 2023, 10, 1, 100);
+        //a.changeAvailability(c, 7, 2023, 9, 1, 2023, 9, 30, 1);
+        //a.checkAvailability(c, 1, 2023, 8, 31, 2023, 9, 1, 0);
+        //a.checkAvailability(c, 1, 2023, 9, 2, 2023, 9, 7, 0);
+        //a.changeAvailability(c, 1, 2023, 9, 2, 2023, 9, 7, 1);
+        //a.checkAvailability(c, 1, 2023, 9, 2, 2023, 9, 7, 0);
+        //a.updateAvailabilityPrice(c, 7, 2023, 9, 28, 2023, 9,30, 25);
+        //a.booking(c, 7, 2023, 9, 1, 2023, 9, 5, 1);
+        //up.RemoveListing(c, 7);
+        a.cancelBooking(c, 4, 1);
+        //up.RemoveListing(c, 5);
     }
 }
