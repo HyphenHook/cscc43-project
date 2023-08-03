@@ -106,13 +106,12 @@ END;
 DELIMITER ;
 
 CREATE TABLE LocationInfo (
-  latitude DOUBLE,
-  longitude DOUBLE,
+  latitude DOUBLE NOT NULL,
+  longitude DOUBLE NOT NULL,
   postalcode VARCHAR(10) NOT NULL,
-  address VARCHAR(160) NOT NULL,
+  address VARCHAR(160) PRIMARY KEY,
   city VARCHAR(20) NOT NULL,
-  country VARCHAR(30) NOT NULL,
-  PRIMARY KEY (latitude, longitude)
+  country VARCHAR(30) NOT NULL
 );
 
 DELIMITER |
@@ -139,9 +138,8 @@ DELIMITER ;
 CREATE TABLE Listing (
   listingID INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(30) NOT NULL,
-  latitude DOUBLE,
-  longitude DOUBLE,
-  FOREIGN KEY (latitude, longitude) REFERENCES LocationInfo (latitude, longitude)
+  address VARCHAR(160),
+  FOREIGN KEY (address) REFERENCES LocationInfo (address)
 );
 
 DELIMITER |
@@ -159,7 +157,7 @@ DELIMITER ;
 CREATE TABLE Availability (
   listingID INT,
   date DATE,
-  price DOUBLE,
+  price DOUBLE NOT NULL,
   PRIMARY KEY (listingID, date),
   FOREIGN KEY (listingID) REFERENCES Listing (listingID)
 );

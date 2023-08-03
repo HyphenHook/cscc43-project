@@ -54,6 +54,7 @@
 6. All host listing informations are valid locations.
 7. For the reports of the number of bookings in a specific time period, bookings are included inside the time period whenever it has a date inside the period.
 8. The types of status for availability are yes (ready for booking), no (not ready for booking) and book (already booked).
+9. Address for a specific listing also includes the floor number if its an appartment.
 
 ## Normalization - 3NF
 ***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, SIN, email, password)  
@@ -66,8 +67,8 @@ Stays unchanged.
 
 ***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
 Decomposes into:
-  - ***Listing*** (<ins>listingID</ins>, type, latitude, longitude)  
-  - ***LocationInfo*** (<ins>latitude</ins>, <ins>longitude</ins>, postalcode, address, city, country)  
+  - ***Listing*** (<ins>listingID</ins>, type, address)  
+  - ***LocationInfo*** (latitude, longitude, postalcode, <ins>address</ins>, city, country)  
 
 ***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price, status)  
 Stays unchanged.
