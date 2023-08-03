@@ -1,14 +1,14 @@
 USE mybnb;
 
 DROP TABLE IF EXISTS User, PersonalInfo, CreditCard, Listing, Availability, Rating,
-Amenities, TheListings, PaymentMethod, Books, TheBookings, RenterRates, HostRates;
+Amenities, TheListings, PaymentMethod, Books, TheBookings, RenterRates, HostRates, LocationInfo;
 
 CREATE TABLE PersonalInfo (
   sin VARCHAR(15) PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   address VARCHAR(160) NOT NULL,
   birthdate DATE NOT NULL,
-  occupation VARCHAR(70) NOT NULL,
+  occupation VARCHAR(70) NOT NULL
 );
 
 DELIMITER |
@@ -228,7 +228,7 @@ CREATE TABLE Books (
   startdate DATE,
   enddate DATE,
   status VARCHAR(20),
-  FOREIGN KEY (listingID) REFERENCES Listing (listingID),
+  FOREIGN KEY (listingID) REFERENCES Listing (listingID)
 );
 
 DELIMITER |
@@ -265,7 +265,7 @@ CREATE TABLE RenterRates (
   FOREIGN KEY (renterID) REFERENCES User (userID),
   FOREIGN KEY (hostID) REFERENCES User (userID),
   FOREIGN KEY (listingID) REFERENCES Listing (listingID),
-  FOREIGN KEY (ratingID) REFERENCES Rating (ratingID),
+  FOREIGN KEY (ratingID) REFERENCES Rating (ratingID)
 );
 
 CREATE TABLE HostRates (
@@ -274,5 +274,5 @@ CREATE TABLE HostRates (
   hostID INT,
   FOREIGN KEY (renterID) REFERENCES User (userID),
   FOREIGN KEY (hostID) REFERENCES User (userID),
-  FOREIGN KEY (ratingID) REFERENCES Rating (ratingID),
+  FOREIGN KEY (ratingID) REFERENCES Rating (ratingID)
 );
