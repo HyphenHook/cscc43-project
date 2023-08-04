@@ -38,7 +38,8 @@ CREATE TABLE User (
   sin VARCHAR(15),
   email VARCHAR(50) NOT NULL,
   password VARCHAR(50) NOT NULL,
-  FOREIGN KEY (sin) REFERENCES PersonalInfo (sin)
+  FOREIGN KEY (sin) REFERENCES PersonalInfo (sin),
+  UNIQUE (email)
 );
 
 DELIMITER |
