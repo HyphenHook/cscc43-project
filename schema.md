@@ -1,7 +1,7 @@
 ## **Relational schema:**  
 ***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, sin, email, password)  
 ***CreditCard*** (<ins>cardnumber</ins>, <ins>expirydate</ins>, holdername)  
-***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
+***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country, status)  
 ***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price, status)  
 ***Rating*** (<ins>ratingID</ins>, rating, comment)  
 ***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
@@ -67,7 +67,7 @@ Stays unchanged.
 
 ***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country)  
 Decomposes into:
-  - ***Listing*** (<ins>listingID</ins>, type, address)  
+  - ***Listing*** (<ins>listingID</ins>, type, address, status)  
   - ***LocationInfo*** (latitude, longitude, postalcode, <ins>address</ins>, city, country)  
 
 ***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price, status)  

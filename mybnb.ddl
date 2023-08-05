@@ -27,6 +27,9 @@ DECLARE msg VARCHAR(255);
   ELSEIF NEW.occupation = '' THEN
     SET msg = 'Empty occupation violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
+  ELSEIF NEW.birthdate > DATE_SUB(CURDATE(), INTERVAL 18 YEAR) THEN
+    SET msg = 'Not 18+! violate!';
+    SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
 END;
 |
@@ -140,6 +143,7 @@ CREATE TABLE Listing (
   listingID INT AUTO_INCREMENT PRIMARY KEY,
   type VARCHAR(30) NOT NULL,
   address VARCHAR(160),
+  status VARCHAR(10) NOT NULL,
   FOREIGN KEY (address) REFERENCES LocationInfo (address)
 );
 
@@ -149,6 +153,9 @@ FOR EACH ROW BEGIN
 DECLARE msg VARCHAR(255);
   IF NEW.type = '' THEN
     SET msg = 'Empty type violate!';
+    SIGNAL sqlstate '45000' set message_text = msg;
+  ELSEIF NEW.status = '' THEN
+    SET msg = 'Empty status violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
 END;
@@ -170,7 +177,7 @@ DECLARE msg VARCHAR(255);
   IF NEW.price < 0 THEN
     SET msg = 'Negative price violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
-  ELSEIF NEW.date < CURRENT_DATE() THEN
+  ELSEIF NEW.date < CURDATE() THEN
     SET msg = 'Date is in the past violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
