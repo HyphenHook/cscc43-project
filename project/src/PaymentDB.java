@@ -30,4 +30,26 @@ public class PaymentDB {
       return -1;
     }
   }
+  public static boolean removeCreditCard (int cardID)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "DELETE FROM CreditCard WHERE cardID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, cardID);
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+        return success;
+      }
+      return false;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
 }

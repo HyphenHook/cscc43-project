@@ -96,7 +96,7 @@ CREATE TABLE PaymentMethod (
   cardID INT,
   PRIMARY KEY (userID, cardID),
   FOREIGN KEY (userID) REFERENCES User (userID),
-  FOREIGN KEY (cardID) REFERENCES CreditCard (cardID)
+  FOREIGN KEY (cardID) REFERENCES CreditCard (cardID) ON DELETE CASCADE
 );
 
 DELIMITER |
