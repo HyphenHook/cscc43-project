@@ -7,7 +7,7 @@ public class Availability {
                                    int endday, double price){
 
         try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-            String sqlQuery = "INSERT INTO Availability (listingID, a_date, price, status) VALUES (?, ?, ?, ?)";
+            String sqlQuery = "INSERT INTO Availability (listingID, date, price, status) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
 
@@ -19,7 +19,7 @@ public class Availability {
                 preparedStatement.setInt(1, listingID);
                 preparedStatement.setDate(2, java.sql.Date.valueOf(currentDate));
                 preparedStatement.setDouble(3, price);
-                preparedStatement.setString(4, "no");
+                preparedStatement.setString(4, "yes");
                 preparedStatement.executeUpdate();
 
                 currentDate = currentDate.plusDays(1);
@@ -35,7 +35,7 @@ public class Availability {
                                    int endday, int type){
         if(checkAvailability(c, listingID, startyear, startmonth, startday, endyear, endmonth, endday, 1)) {
             try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-                String sqlQuery = "UPDATE Availability SET status = ? WHERE listingID = ? AND a_date BETWEEN ? AND ?";
+                String sqlQuery = "UPDATE Availability SET status = ? WHERE listingID = ? AND date BETWEEN ? AND ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
                 String status = "no";
@@ -64,14 +64,14 @@ public class Availability {
             }
         } else {
             System.out.println("Unable to change availability of listing with listing ID " + listingID
-            + " because it has been reserved in that period");
+                    + " because it has been reserved in that period");
         }
     }
 
     public boolean checkAvailability(connectionSQL c, int listingID, int startyear, int startmonth, int startday, int endyear, int endmonth,
                                      int endday, int mode){
         try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-            String sqlQuery = "SELECT COUNT(*) AS count FROM Availability Where listingID = ? AND status = ? AND a_date BETWEEN ? AND ?";
+            String sqlQuery = "SELECT COUNT(*) AS count FROM Availability Where listingID = ? AND status = ? AND date BETWEEN ? AND ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             LocalDate startDate = LocalDate.of(startyear, startmonth, startday);
@@ -142,7 +142,7 @@ public class Availability {
         if(checkAvailability(c, listingID, startyear, startmonth, startday, endyear, endmonth, endday, 1)){
 
             try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-                String sqlQuery = "UPDATE Availability SET price = ? WHERE listingID = ? AND a_date BETWEEN ? AND ?";
+                String sqlQuery = "UPDATE Availability SET price = ? WHERE listingID = ? AND date BETWEEN ? AND ?";
                 PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
                 LocalDate startDate = LocalDate.of(startyear, startmonth, startday);
@@ -170,10 +170,10 @@ public class Availability {
     }
 
     public void removeAvailability(connectionSQL c, int listingID, int startyear, int startmonth, int startday, int endyear, int endmonth,
-                                   int endday, int mode){
+                                   int endday){
         try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
             if(checkAvailability(c, listingID, startyear, startmonth, startday, endyear, endmonth, endday, 1)){
-                String sqlQuery = "DELETE FROM Availability Where listingID = ? AND a_date BETWEEN ? AND ?";
+                String sqlQuery = "DELETE FROM Availability Where listingID = ? AND date BETWEEN ? AND ?";
 
                 LocalDate startDate = LocalDate.of(startyear, startmonth, startday);
                 LocalDate endDate = LocalDate.of(endyear, endmonth, endday);
@@ -187,7 +187,7 @@ public class Availability {
 
                 if (result > 0) {
                     System.out.println("Listing with ID " + listingID + " remove Availability from " + startDate.toString()
-                    + " to " + endDate.toString());
+                            + " to " + endDate.toString());
                 }
 
                 p.close();
@@ -228,27 +228,27 @@ public class Availability {
     }
 
     public boolean removeAllAvailability(connectionSQL c, int listingID){
-      if(checkRemoveAllAvailability(c, listingID)){
-          try(Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)){
-              String sqlQuery = "DELETE FROM Availability Where listingID = ?";
+        if(checkRemoveAllAvailability(c, listingID)){
+            try(Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)){
+                String sqlQuery = "DELETE FROM Availability Where listingID = ?";
 
-              PreparedStatement p = connection.prepareStatement(sqlQuery);
-              p.setInt(1, listingID);
-              int result = p.executeUpdate();
+                PreparedStatement p = connection.prepareStatement(sqlQuery);
+                p.setInt(1, listingID);
+                int result = p.executeUpdate();
 
-              if (result >= 0) {
-                  System.out.println("Listing with ID " + listingID + " removed from Availability");
-              }
+                if (result >= 0) {
+                    System.out.println("Listing with ID " + listingID + " removed from Availability");
+                }
 
-              p.close();
-              return true;
-          } catch (SQLException e){
-              e.printStackTrace();
-          }
-      } else {
-          return false;
-      }
-      return false;
+                p.close();
+                return true;
+            } catch (SQLException e){
+                e.printStackTrace();
+            }
+        } else {
+            return false;
+        }
+        return false;
     }
 
     public void booking(connectionSQL c, int listingID, int startyear, int startmonth, int startday, int endyear, int endmonth,
@@ -352,7 +352,7 @@ public class Availability {
     // Specially used for recovering availability after cancellation.
     private void recoverAvailability(connectionSQL c, int listingID, java.sql.Date start, java.sql.Date end){
         try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-            String sqlQuery = "UPDATE Availability SET status = ? WHERE listingID = ? AND a_date BETWEEN ? AND ?";
+            String sqlQuery = "UPDATE Availability SET status = ? WHERE listingID = ? AND date BETWEEN ? AND ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
 
@@ -364,7 +364,7 @@ public class Availability {
 
             if (result > 0) {
                 System.out.println("Listing with ID " + listingID + " has recovered from cancelling appointment from "
-                + start.toString() + " to " + end.toString());
+                        + start.toString() + " to " + end.toString());
             }
             preparedStatement.close();
         } catch (SQLException e) {
@@ -422,5 +422,63 @@ public class Availability {
         } else {
             System.out.println("Cannot delete a booking that doesn't belongs to this user.");
         }
+    }
+
+    public double getTotalPrice(connectionSQL c, int listingID, int startyear, int startmonth,
+                                int startday, int endyear, int endmonth, int endday){
+        if(checkAvailability(c, listingID, startyear, startmonth, startday, endyear,
+                endmonth, endday, 0)){
+            try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
+                String sqlQuery = "SELECT price FROM Availability Where listingID = ? AND date BETWEEN ? AND ?";
+                PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+
+                LocalDate startDate = LocalDate.of(startyear, startmonth, startday);
+                LocalDate endDate = LocalDate.of(endyear, endmonth, endday);
+
+                double sum = 0;
+
+                preparedStatement.setInt(1, listingID);
+                preparedStatement.setDate(2, java.sql.Date.valueOf(startDate));
+                preparedStatement.setDate(3, java.sql.Date.valueOf(endDate));
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    double price = resultSet.getDouble("price");
+                    sum += price;
+
+                }
+
+                preparedStatement.close();
+                System.out.println("Total price of listing " + listingID + " from " + startDate.toString()
+                        + " to " + endDate.toString() + ": " + sum);
+                return sum;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("The listing with ID " + listingID + " unavailable in given time period");
+        return -1;
+    }
+
+    public boolean checkPrice(connectionSQL c, int listingID, int startyear, int startmonth,
+                              int startday, int endyear, int endmonth, int endday, double bound){
+        double total;
+
+        if(bound == 0){
+            return true;
+        }
+
+        if((total = getTotalPrice(c, listingID, startyear, startmonth, startday, endyear,
+                endmonth, endday)) != -1){
+            if(total <= bound){
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        System.out.println("Cannot get availability of listing " + listingID);
+        return false;
     }
 }
