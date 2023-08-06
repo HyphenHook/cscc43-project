@@ -70,7 +70,7 @@ CREATE TABLE CreditCard (
   cardnumber VARCHAR(19) NOT NULL,
   expirydate DATE NOT NULL,
   holdername VARCHAR(100) NOT NULL,
-  PRIMARY KEY (cardnumber, expirydate)
+  cardID INT AUTO_INCREMENT PRIMARY KEY
 );
 
 DELIMITER |
@@ -83,6 +83,9 @@ DECLARE msg VARCHAR(255);
   ELSEIF NEW.holdername = '' THEN
     SET msg = 'Empty holdername violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
+  ELSEIF NEW.expirydate < CURDATE() THEN
+    SET msg = 'Card expired violate!';
+    SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
 END;
 |
@@ -90,11 +93,10 @@ DELIMITER ;
 
 CREATE TABLE PaymentMethod (
   userID INT,
-  cardnumber VARCHAR(19),
-  expirydate DATE,
-  PRIMARY KEY (userID, cardnumber),
+  cardID INT,
+  PRIMARY KEY (userID, cardID),
   FOREIGN KEY (userID) REFERENCES User (userID),
-  FOREIGN KEY (cardnumber, expirydate) REFERENCES CreditCard (cardnumber, expirydate)
+  FOREIGN KEY (cardID) REFERENCES CreditCard (cardID)
 );
 
 DELIMITER |
@@ -166,6 +168,7 @@ CREATE TABLE Availability (
   listingID INT,
   date DATE,
   price DOUBLE NOT NULL,
+  status VARCHAR(16) NOT NULL,
   PRIMARY KEY (listingID, date),
   FOREIGN KEY (listingID) REFERENCES Listing (listingID)
 );
@@ -179,6 +182,9 @@ DECLARE msg VARCHAR(255);
     SIGNAL sqlstate '45000' set message_text = msg;
   ELSEIF NEW.date < CURDATE() THEN
     SET msg = 'Date is in the past violate!';
+    SIGNAL sqlstate '45000' set message_text = msg;
+  ELSEIF NEW.status = '' THEN
+    SET msg = 'Empty status violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
 END;
@@ -233,9 +239,10 @@ CREATE TABLE TheListings (
 CREATE TABLE Books (
   bookingID INT AUTO_INCREMENT PRIMARY KEY,
   listingID INT,
-  startdate DATE,
-  enddate DATE,
-  status VARCHAR(20),
+  startdate DATE NOT NULL,
+  enddate DATE NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  card VARCHAR(4) NOT NULL,
   FOREIGN KEY (listingID) REFERENCES Listing (listingID)
 );
 
@@ -246,11 +253,14 @@ DECLARE msg VARCHAR(255);
   IF NEW.status = '' THEN
     SET msg = 'Empty status violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
-  ELSEIF NEW.startdate < CURRENT_DATE() THEN
+  ELSEIF NEW.startdate < CURDATE() THEN
     SET msg = 'Start Date is in the past violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
-  ELSEIF NEW.enddate < CURRENT_DATE() THEN
+  ELSEIF NEW.enddate < CURDATE() THEN
     SET msg = 'End Date is in the past violate!';
+    SIGNAL sqlstate '45000' set message_text = msg;
+  ELSEIF NEW.card = '' THEN
+    SET msg = 'Empty last 4 card digit violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
 END;

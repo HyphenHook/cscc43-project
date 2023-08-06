@@ -10,4 +10,8 @@ public class Listing {
     this.address = address;
     this.status = status;
   }
+  public int getID()
+  {
+    return this.listingID;
+  }
 }
