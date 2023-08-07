@@ -1,5 +1,5 @@
 ## **Relational schema:**  
-***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, sin, email, password)  
+***User*** (<ins>userID</ins>, name, address, birthdate, occupation, sin, email, password)  
 ***CreditCard*** (<ins>cardID</ins>, cardnumber, expirydate, holdername)  
 ***Listing*** (<ins>listingID</ins>, type, latitude, longitude, postalcode, address, city, country, status)  
 ***Availability*** (<ins>date</ins>, <ins>listingID</ins>, price, status)  
@@ -7,7 +7,7 @@
 ***Amenities*** (<ins>name</ins>, <ins>listingID</ins>)  
 ***TheListings*** (<ins>userID</ins>, <ins>listingID</ins>)  
 ***PaymentMethod*** (<ins>userID</ins>, <ins>cardID</ins>)  
-***Books*** (<ins>bookingID</ins>, <ins>listingID</ins>, startdate, enddate, status, card)  
+***Books*** (<ins>bookingID</ins>, <ins>listingID</ins>, startdate, enddate, status, card, date, total)  
 ***TheBookings*** (<ins>bookingID</ins>, <ins>userID</ins>)  
 ***RenterRates*** (<ins>renterID</ins>, <ins>ratingID</ins>, <ins>hostID</ins>, <ins>listingID</ins>)  
 ***HostRates*** (<ins>hostID</ins>, <ins>ratingID</ins>, <ins>renterID</ins>)
@@ -58,9 +58,9 @@
 10. Each booking is paid with a single card.
 
 ## Normalization - 3NF
-***User*** (<ins>userID</ins>, name, address, birthdate, occupation, type, SIN, email, password)  
+***User*** (<ins>userID</ins>, name, address, birthdate, occupation, SIN, email, password)  
 Decomposes into:  
-  - ***User*** (<ins>userID</ins>, type, sin, email, password)
+  - ***User*** (<ins>userID</ins>, sin, email, password)
   - ***PersonalInfo*** (<ins>sin</ins>, name, address, birthdate, occupation)  
 
 ***CreditCard*** (<ins>cardID</ins>, cardnumber, expirydate, holdername)  
@@ -89,7 +89,7 @@ Stays unchanged.
 ***TheBookings*** (<ins>userID</ins>, <ins>bookingID</ins>)  
 Stays unchanged.
 
-***Books*** (<ins>bookingID</ins>, <ins>listingID</ins>, startdate, enddate, status, card)  
+***Books*** (<ins>bookingID</ins>, <ins>listingID</ins>, startdate, enddate, status, card, date, total)  
 Stays unchanged.
 
 ***RenterRates*** (<ins>renterID</ins>, <ins>ratingID</ins>, <ins>hostID</ins>, <ins>listingID</ins>)  

@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS User, PersonalInfo, CreditCard, Listing, Availability, Rati
 Amenities, TheListings, PaymentMethod, Books, TheBookings, RenterRates, HostRates, LocationInfo;
 
 CREATE TABLE PersonalInfo (
-  sin VARCHAR(15) PRIMARY KEY,
+  sin VARCHAR(9) PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   address VARCHAR(160) NOT NULL,
   birthdate DATE NOT NULL,
@@ -37,11 +37,10 @@ DELIMITER ;
 
 CREATE TABLE User (
   userID INT AUTO_INCREMENT PRIMARY KEY,
-  type VARCHAR(6) NOT NULL,
-  sin VARCHAR(15),
-  email VARCHAR(50) NOT NULL,
-  password VARCHAR(50) NOT NULL,
-  FOREIGN KEY (sin) REFERENCES PersonalInfo (sin),
+  sin VARCHAR(9),
+  email VARCHAR(50),
+  password VARCHAR(50),
+  FOREIGN KEY (sin) REFERENCES PersonalInfo (sin) ON DELETE SET NULL,
   UNIQUE (email)
 );
 
@@ -58,16 +57,13 @@ DECLARE msg VARCHAR(255);
   ELSEIF NEW.password = '' THEN
     SET msg = 'Empty password violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
-  ELSEIF NEW.type = '' THEN
-    SET msg = 'Empty type violate!';
-    SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
 END;
 |
 DELIMITER ;
 
 CREATE TABLE CreditCard (
-  cardnumber VARCHAR(19) NOT NULL,
+  cardnumber VARCHAR(16) NOT NULL,
   expirydate DATE NOT NULL,
   holdername VARCHAR(100) NOT NULL,
   cardID INT AUTO_INCREMENT PRIMARY KEY
@@ -98,18 +94,6 @@ CREATE TABLE PaymentMethod (
   FOREIGN KEY (userID) REFERENCES User (userID),
   FOREIGN KEY (cardID) REFERENCES CreditCard (cardID) ON DELETE CASCADE
 );
-
-DELIMITER |
-CREATE TRIGGER PaymentMethod_trigger BEFORE INSERT ON PaymentMethod
-FOR EACH ROW BEGIN
-DECLARE msg VARCHAR(255);
-  IF NEW.cardnumber = '' THEN
-    SET msg = 'Empty cardnumber violate!';
-    SIGNAL sqlstate '45000' set message_text = msg;
-  END IF;
-END;
-|
-DELIMITER ;
 
 CREATE TABLE LocationInfo (
   latitude DOUBLE NOT NULL,
@@ -243,6 +227,8 @@ CREATE TABLE Books (
   enddate DATE NOT NULL,
   status VARCHAR(20) NOT NULL,
   card VARCHAR(4) NOT NULL,
+  date DATE NOT NULL,
+  total double NOT NULL,
   FOREIGN KEY (listingID) REFERENCES Listing (listingID)
 );
 
@@ -262,6 +248,18 @@ DECLARE msg VARCHAR(255);
   ELSEIF NEW.card = '' THEN
     SET msg = 'Empty last 4 card digit violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
+  END IF;
+END;
+|
+DELIMITER ;
+
+DELIMITER |
+CREATE TRIGGER Update_Books_trigger AFTER INSERT ON Books
+FOR EACH ROW BEGIN
+  IF NEW.enddate < CURDATE() AND NEW.status = 'Booked' THEN
+    UPDATE Books
+    SET status = 'Completed'
+    WHERE bookingID = NEW.bookingID
   END IF;
 END;
 |

@@ -1,5 +1,7 @@
 import java.sql.*;
+import java.util.ArrayList;
 public class ListingDB {
+  private static ArrayList<Listing> list;
   public static Listing addListing (String address, String type)
   {
     try{
@@ -7,7 +9,7 @@ public class ListingDB {
       if (con != null)
       {
         String query = "INSERT INTO Listing(type, address, status) VALUES (?, ?, 'Active')";
-        PreparedStatement s = con.prepareStatement(query);
+        PreparedStatement s = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
         s.setString(1, type);
         s.setString(2, address);
         Listing list = null;

@@ -21,25 +21,51 @@ public class UserDB {
       }
       return false;
     }
+    catch (SQLIntegrityConstraintViolationException e)
+    {
+      return false;
+    }
     catch (SQLException e)
     {
       e.printStackTrace();
       return false;
     }
   }
-
-  public static boolean addUser (String name, String email, String password, String type, String sin)
+  public static boolean isSinExist (String sin)
   {
     try{
       Connection con = Connector.getConnection();
       if (con != null)
       {
-        String query = "INSERT INTO User(type, sin, email, password) VALUES (?, ?, ?, ?)";
+        String query = "SELECT * FROM PersonalInfo WHERE sin = ?";
         PreparedStatement s = con.prepareStatement(query);
-        s.setString(1, type);
-        s.setString(2, sin);
-        s.setString(3, email);
-        s.setString(4, password);
+        s.setString(1, sin);
+        ResultSet r = s.executeQuery();
+        boolean result = r.next();
+        r.close();
+        s.close();
+        con.close();
+        return result;
+      }
+      return true;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return true;
+    }
+  }
+  public static boolean addUser (String email, String password, String sin)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "INSERT INTO User(sin, email, password) VALUES (?, ?, ?)";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setString(1, sin);
+        s.setString(2, email);
+        s.setString(3, password);
         boolean success = s.executeUpdate() >= 1;
         s.close();
         con.close();
@@ -93,7 +119,7 @@ public class UserDB {
         User instance = null;
         if (r.next())
         {
-          User.setInstance (r.getInt("userID"), r.getString("email"), r.getString("type"), r.getString("name"), r.getString("address"), r.getDate("birthdate"), r.getString("occupation"));
+          User.setInstance (r.getString ("sin"), r.getInt("userID"), r.getString("email"), r.getString("name"), r.getString("address"), r.getDate("birthdate"), r.getString("occupation"));
           instance = User.getInstance();
         }
         r.close();
@@ -107,6 +133,50 @@ public class UserDB {
     {
       e.printStackTrace();
       return null;
+    }
+  }
+  public static boolean deleteInfo ()
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "DELETE FROM PersonalInfo WHERE sin = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setString (1, User.getInstance().getSin());
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+        return success;
+      }
+      return false;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
+  public static boolean deleteUser ()
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "UPDATE User SET email = NULL WHERE userID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt (1, User.getInstance().getID());
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+        return success;
+      }
+      return false;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return false;
     }
   }
 }
