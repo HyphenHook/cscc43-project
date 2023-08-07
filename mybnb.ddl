@@ -259,7 +259,7 @@ FOR EACH ROW BEGIN
   IF NEW.enddate < CURDATE() AND NEW.status = 'Booked' THEN
     UPDATE Books
     SET status = 'Completed'
-    WHERE bookingID = NEW.bookingID
+    WHERE bookingID = NEW.bookingID;
   END IF;
 END;
 |

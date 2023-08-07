@@ -19,7 +19,7 @@ public class Renter {
       {
         case 0:
         {
-
+          showBookings();
           break;
         }
         case 1:
@@ -56,14 +56,66 @@ public class Renter {
     p.println ("=      Renter Service     =");
     p.println ("===========================");
     p.println ("0 - Show My Bookings");
-    p.println ("1 - Search Listings to Book ");
+    p.println ("1 - Search Listings to Book");
     p.println ("2 - Show Payment Methods");
     p.println ("3 - Show Reports");
     p.println ("4 - Back");
     p.println ("===========================");
     p.println ("Please select:");
   }
-
+  public static void searchListings(){
+    
+  }
+  public static void showBookings(){
+    Main.clearScreen();
+    int input = 0;
+    boolean leave = false;
+    while (true)
+    {
+      BookingDB.fetchBookings();
+      p.println ("===========================");
+      p.println ("=       All Bookings      =");
+      p.println ("===========================");
+      BookingDB.showBookings();
+      p.println ("===========================");
+      p.println ("0 - Cancel a booking");
+      p.println ("1 - Back");
+      p.println ("===========================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      switch (input)
+      {
+        case 0:
+        {
+          if (!cancelBooking())
+            p.println ("Failed to cancel a booking!");
+          else
+            p.println ("Successfully canceled the booking!");
+          break;
+        }
+        case 1:
+        {
+          Main.clearScreen();
+          leave = true;
+          break;
+        }
+        default:
+        {
+          Main.clearScreen();
+          p.println ("Please select a valid option!");
+          break;
+        }
+      }
+      if (leave) break;
+    }
+  }
+  public static boolean cancelBooking()
+  {
+    p.println ("Please specify the index of the booking you wish to cancel:");
+    int index = s.nextInt();
+    Main.clearScreen();
+    return BookingDB.cancelBooking(index);
+  }
   public static void showPayments(){
     Main.clearScreen();
     int input = 0;
