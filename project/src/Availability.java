@@ -138,7 +138,6 @@ public class Availability {
 
     public void updateAvailabilityPrice(connectionSQL c, int listingID, int startyear, int startmonth, int startday, int endyear, int endmonth,
                                         int endday, double new_price){
-
         if(checkAvailability(c, listingID, startyear, startmonth, startday, endyear, endmonth, endday, 1)){
 
             try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
@@ -251,24 +250,56 @@ public class Availability {
         return false;
     }
 
+    private void theBooking(connectionSQL c, int userID, int bookingID) {
+        try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
+            String sqlQuery = "INSERT INTO TheBookings (userID, bookingID) VALUES (?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, userID);
+            preparedStatement.setInt(2, bookingID);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("User " + userID + " Succussfully make a booking with ID " + bookingID);
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void booking(connectionSQL c, int listingID, int startyear, int startmonth, int startday, int endyear, int endmonth,
-                        int endday, int userID){
+                        int endday, int userID, String card){
         if(checkAvailability(c, listingID, startyear, startmonth, startday, endyear, endmonth, endday, 0)){
             changeAvailability(c, listingID, startyear, startmonth, startday, endyear, endmonth, endday, 2);
 
             try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-                String sqlQuery = "INSERT INTO TheBookings (renterID, listingID, startDate, endDate, status) VALUES (?, ?, ?, ?, ?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+                String sqlQuery = "INSERT INTO Books (listingID, startdate, enddate, status) VALUES (?, ?, ?, ?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
                 LocalDate startDate = LocalDate.of(startyear, startmonth, startday);
                 LocalDate endDate = LocalDate.of(endyear, endmonth, endday);
 
-                preparedStatement.setInt(1, userID);
-                preparedStatement.setInt(2, listingID);
-                preparedStatement.setDate(3, java.sql.Date.valueOf(startDate));
-                preparedStatement.setDate(4, java.sql.Date.valueOf(endDate));
-                preparedStatement.setString(5, "book");
-                preparedStatement.executeUpdate();
+                preparedStatement.setInt(1, listingID);
+                preparedStatement.setDate(2, java.sql.Date.valueOf(startDate));
+                preparedStatement.setDate(3, java.sql.Date.valueOf(endDate));
+                preparedStatement.setString(4, "book");
+                //preparedStatement.setString(5, card);
+                int newrows = preparedStatement.executeUpdate();
+
+                if(newrows > 0){
+                    ResultSet result = preparedStatement.getGeneratedKeys();
+                    if (result.next()) {
+                        int bookingID = result.getInt(1);
+                        System.out.println("Successfully inserted a new Books with bookingID: " + bookingID);
+                        System.out.println("Now insert TheBookings");
+                        theBooking(c, userID, bookingID);
+                    }
+                    result.close();
+                } else {
+                    System.out.println("Failed to insert a new element into the Books table.");
+                }
+
 
                 System.out.println("Succussfully book listing with ID " + listingID + " from " +
                         startDate.toString() + " to " + endDate.toString());
@@ -284,7 +315,7 @@ public class Availability {
     public int getBookingListing(connectionSQL c, int bookingID){
         int answer = -1;
         try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-            String sqlQuery = "SELECT listingID FROM TheBookings WHERE bookingID = ? and status = ?";
+            String sqlQuery = "SELECT listingID FROM TheBookings NATURAL JOIN Books WHERE bookingID = ? and status = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, bookingID);
@@ -308,7 +339,7 @@ public class Availability {
         boolean last = false;
 
         try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-            String sqlQuery = "SELECT renterID, listingID FROM TheBookings WHERE bookingID = ? and status = ?";
+            String sqlQuery = "SELECT userID, listingID FROM TheBookings NATURAL JOIN Books WHERE bookingID = ? and status = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, bookingID);
@@ -316,7 +347,7 @@ public class Availability {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                int renterID = resultSet.getInt("renterID");
+                int renterID = resultSet.getInt("userID");
                 int listingID = resultSet.getInt("listingID");
                 if(up.AccountType(c, userID).equals("renter")) {
                     if (userID == renterID) {
@@ -327,7 +358,7 @@ public class Availability {
                         System.out.println("Booking with ID " + bookingID + " not booked by this user.");
                         preparedStatement.close();
                     }
-                } else if (up.AccountType(c, userID).equals("renter")){
+                } else if (up.AccountType(c, userID).equals("host")){
                     int owner = up.checkOwner(c, listingID);
                     if (userID == owner){
                         System.out.println("Listing with ID " + listingID + " belongs to user with ID " + userID);
@@ -377,7 +408,7 @@ public class Availability {
         try(Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)){
             int listingID = getBookingListing(c, bookingID);
             System.out.println(listingID);
-            String sqlQuery = "SELECT startDate, endDate FROM TheBookings WHERE bookingID = ? and status = ?";
+            String sqlQuery = "SELECT startdate, enddate FROM TheBookings NATURAL JOIN Books WHERE bookingID = ? and status = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, bookingID);
@@ -385,8 +416,8 @@ public class Availability {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                java.sql.Date start = resultSet.getDate("startDate");
-                java.sql.Date end = resultSet.getDate("endDate");
+                java.sql.Date start = resultSet.getDate("startdate");
+                java.sql.Date end = resultSet.getDate("enddate");
                 recoverAvailability(c, listingID, start, end);
             }
 
@@ -401,7 +432,7 @@ public class Availability {
     public void cancelBooking(connectionSQL c, int bookingID, int userID){
         if(checkRelation(c, userID, bookingID)){
             try (Connection connection = DriverManager.getConnection(c.jdbcUrl, c.username, c.userpassword)) {
-                String sq = "UPDATE TheBookings SET status = ? WHERE bookingID = ?";
+                String sq = "UPDATE Books SET status = ? WHERE bookingID = ?";
                 PreparedStatement p = connection.prepareStatement(sq);
                 recoverFromCancel(c, bookingID);
 
