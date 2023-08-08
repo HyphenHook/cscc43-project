@@ -3,6 +3,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 public class ListingDB {
   private static ArrayList<Listing> list;
+  private static ArrayList<Availability> alist;
   public static Listing addListing (String address, String type)
   {
     try{
@@ -117,8 +118,8 @@ public class ListingDB {
       {
         String query = "INSERT INTO Amenities(name, listingID) VALUES (?, ?)";
         PreparedStatement s = con.prepareStatement(query);
-        s.setInt(1, listingID);
-        s.setString(2, amenity);
+        s.setInt(2, listingID);
+        s.setString(1, amenity);
         boolean success = s.executeUpdate() >= 1;
         s.close();
         con.close();
@@ -189,7 +190,7 @@ public class ListingDB {
       return false;
     }
   }
-  public static void seeAvailability (int listingID){
+  public static void fetchAvailability (int listingID){
     try{
       Connection con = Connector.getConnection();
       if (con != null)
@@ -197,10 +198,10 @@ public class ListingDB {
         String query = "SELECT * FROM Availability WHERE listingID = ?";
         PreparedStatement s = con.prepareStatement(query);
         s.setInt(1, listingID);
-
+        alist = new ArrayList<>();
         ResultSet r = s.executeQuery();
         while (r.next())
-          System.out.println(r.getDate("date") + "  |  " + r.getDouble("price") + "  |  " + r.getString("status"));
+          alist.add (new Availability(r.getDate("date"), r.getInt("listingID"), r.getDouble("price"), r.getString("status")));
         r.close();
         s.close();
         con.close();
@@ -209,6 +210,14 @@ public class ListingDB {
     catch (SQLException e)
     {
       e.printStackTrace();
+    }
+  }
+  public static void seeAvailability (int listingID)
+  {
+    fetchAvailability(listingID);
+    for (Availability i:alist)
+    {
+      System.out.println(i.getDate() + "  |  $" + i.getPrice() + "  |  " + i.getStatus());
     }
   }
 
@@ -244,7 +253,7 @@ public class ListingDB {
       Connection con = Connector.getConnection();
       if (con != null)
       {
-        String query = "DELETE FROM Availability WHERE listingID = ? AND date = ? status = 'Available'";
+        String query = "DELETE FROM Availability WHERE listingID = ? AND date = ? AND status = 'Available'";
         PreparedStatement s = con.prepareStatement(query);
         s.setInt(1, listingID);
         s.setDate(2, date);
@@ -302,7 +311,15 @@ public class ListingDB {
       System.out.println(j++ + ". " + i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress());
     }
   }
-
+  public static Listing getListing (int listingID)
+  {
+    for (Listing i: list)
+    {
+      if (i.getID() == listingID)
+        return i;
+    }
+    return null;
+  }
   public static boolean checkRelation(int userID, int listingID){
     try {
       Connection con = Connector.getConnection();
@@ -372,6 +389,62 @@ public class ListingDB {
         return false;
     }
   }
-
-
+  
+  public static void suggestAmenities(String type, int listingID)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT name, COUNT(*) as count FROM Amenities WHERE listingID IN (SELECT listingID FROM Listing WHERE type = ? AND status = 'Active') AND name NOT IN (SELECT name FROM Amenities WHERE listingID = ?) GROUP BY name ORDER BY count DESC";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setString(1, type);
+        s.setInt(2, listingID);
+        ResultSet r = s.executeQuery();
+        ArrayList<String> amen = new ArrayList<>();
+        while (r.next())
+          amen.add (r.getString("name"));
+        if (amen.isEmpty())
+          System.out.println ("You have all the amenities all other listing of same type have and more!");
+        else
+          System.out.println ("Potentially adding these amenities will increase revenue: " + amen.toString());
+      }
+    }
+    catch (SQLException e) {
+        e.printStackTrace();
+    }
+  }
+  public static double suggestPrice (LocalDate start, LocalDate end, String type)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT AVG (suggested2) AS suggested FROM (SELECT AVG(price) AS suggested2 FROM Availability INNER JOIN Listing ON Availability.listingID = Listing.listingID WHERE type = ? AND date BETWEEN ? AND ? AND (Availability.status = 'Available' OR Availability.status = 'Booked') GROUP BY date) as t";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setString(1, type);
+        s.setDate(2, java.sql.Date.valueOf(start));
+        s.setDate(3, java.sql.Date.valueOf(end));
+        ResultSet r = s.executeQuery();
+        double suggested = 0;
+        if (r.next())
+        {
+          suggested = r.getDouble("suggested");
+          System.out.println ("Possible price to consider based on listing of this type and time (for each day): $" + Math.round(suggested*100.00)/100.00);
+        }
+        else
+          System.out.println ("No data to suggest price");
+        r.close();
+        s.close();
+        con.close();
+        return suggested;
+      }
+      return 0;
+    }
+    catch (SQLException e) {
+        e.printStackTrace();
+        return 0;
+    }
+  }
+>>>>>>> 1124edf07ae8a99ce713a9a3d1d6a2aaf3ecce1b
 }

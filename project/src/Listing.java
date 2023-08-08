@@ -17,7 +17,6 @@ public class Listing {
    public String getType(){
     return this.type;
   }
-
   public String getAddress(){
     return this.address;
   }

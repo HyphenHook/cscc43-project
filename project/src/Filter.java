@@ -122,14 +122,14 @@ public class Filter {
   public void getPostal()
   {
     p.println ("===========================");
-    p.println("Please enter the postal code (6 character):");
+    p.println("Please enter the postal code:");
     s.nextLine();
     postalcode = s.nextLine();
     while (true)
     {
-      if (postalcode.length() == 6)
+      if (postalcode.length() > 3)
         break;
-      p.println("Please enter the postal code (6 character):");
+      p.println("Please enter the postal code:");
       postalcode = s.nextLine();
     }
     postal = true;
@@ -160,45 +160,14 @@ public class Filter {
   public void getAmenities ()
   {
     amenities = new ArrayList<>();
-    String[] choice = {
-      "Wifi",
-      "TV",
-      "Kitchen",
-      "Washer",
-      "Free parking on premises",
-      "Paid parking on premises",
-      "Air conditioning",
-      "Dedicated workspace",
-      "Pool",
-      "Hot tub",
-      "Patio",
-      "BBQ grill",
-      "Outdoor dining area",
-      "Fire pit",
-      "Pool table",
-      "Indoor fireplace",
-      "Piano",
-      "Exercise equipment",
-      "Lake access",
-      "Beach Access",
-      "ski-in/ski-out",
-      "Outdoor shower",
-      "Smoke alarm",
-      "First aid kit",
-      "Fire extinguisher",
-      "Carbon monoxide alarm"
-    };
     p.println ("===========================");
-    for (int i = 0; i < choice.length; i++)
-      p.println (i + ". " + choice[i]);
-    p.println ("===========================");
-    p.println ("Choose Amenity by putting their index separated by space!");
+    p.println ("Type the amenities separated by commas!");
     s.nextLine();
     String amen = s.nextLine();
     if (amen.isEmpty())
       return;
-    String[] wants = amen.split(" ");
-    for (String i:wants) amenities.add (choice[Integer.valueOf(i)]);
+    String[] wants = amen.split(",");
+    for (String i:wants) amenities.add (i.trim());
     Main.clearScreen();
   }
   public void getPrice(){

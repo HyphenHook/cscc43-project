@@ -136,7 +136,7 @@ BEGIN
       
       IF randomStatus = 0 THEN
         INSERT INTO Availability (listingID, date, price, status)
-        VALUES (listingID, currentDate, 0, 'Unavailable');
+        VALUES (listingID, currentDate, randomPrice, 'Booked');
       ELSE
         INSERT INTO Availability (listingID, date, price, status)
         VALUES (listingID, currentDate, randomPrice, 'Available');
