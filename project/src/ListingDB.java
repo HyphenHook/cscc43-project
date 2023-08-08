@@ -389,7 +389,7 @@ public class ListingDB {
         return false;
     }
   }
-  
+
   public static void suggestAmenities(String type, int listingID)
   {
     try{
@@ -446,5 +446,4 @@ public class ListingDB {
         return 0;
     }
   }
->>>>>>> 1124edf07ae8a99ce713a9a3d1d6a2aaf3ecce1b
 }
