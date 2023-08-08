@@ -496,14 +496,14 @@ public class Renter {
   public static boolean commentOn(){
     p.println ("Please specify the index of the booking you wish to comment on:");
     int index = s.nextInt();
-    p.println("Please specify the rating you want to give from 0 to 10 in integer form:");
+    p.println("Please specify the rating you want to give from 0 to 5 in integer form:");
     int rating = s.nextInt();
     while (true)
     {
       if (rating < 0 || rating > 5)
         p.println ("Invalid rating!");
       else break;
-      p.println("Please specify the rating you want to give from 0 to 10 in integer form:");
+      p.println("Please specify the rating you want to give from 0 to 5 in integer form:");
       rating = s.nextInt();
     }
     p.println("Please write down the comments:");
