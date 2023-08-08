@@ -179,7 +179,8 @@ public class Renter {
       p.println ("====================================================");
       p.println ("0 - See Listing Details");
       p.println ("1 - Quick book");
-      p.println ("2 - Back");
+      p.println ("2 - See comments of listing");
+      p.println ("3 - Back");
       p.println ("====================================================");
       p.println ("Please select:");
       input = s.nextInt();
@@ -194,6 +195,15 @@ public class Renter {
           break;
         }
         case 2:
+        {
+          if(!showComments()){
+            p.println("Failed to show comments");
+          } else {
+            p.println("Successfully show comments!");
+          }
+          break;
+        }
+        case 3:
         {
           Main.clearScreen();
           leave = true;
@@ -222,7 +232,8 @@ public class Renter {
       BookingDB.showBookings();
       p.println ("===========================");
       p.println ("0 - Cancel a booking");
-      p.println ("1 - Back");
+      p.println("1 - Comment on a booking");
+      p.println ("2 - Back");
       p.println ("===========================");
       p.println ("Please select:");
       input = s.nextInt();
@@ -237,6 +248,15 @@ public class Renter {
           break;
         }
         case 1:
+        {
+          if(!commentOn()){
+            p.println("Failed to comment on booking!");
+          } else {
+            p.println("Comment on booking Successfully!");
+          }
+          break;
+        }
+        case 2:
         {
           Main.clearScreen();
           leave = true;
@@ -371,5 +391,39 @@ public class Renter {
       p.println ("Invalid date!");
       return null;
     }
+  }
+
+  public static boolean commentOn(){
+    p.println ("Please specify the index of the booking you wish to comment on:");
+    int index = s.nextInt();
+    p.println("Please specify the rating you want to give from 0 to 10 in integer form:");
+    int rating = s.nextInt();
+    while (true)
+    {
+      if (rating < 0 || rating > 5)
+        p.println ("Invalid rating!");
+      else break;
+      p.println("Please specify the rating you want to give from 0 to 10 in integer form:");
+      rating = s.nextInt();
+    }
+    p.println("Please write down the comments:");
+    String comment = s.nextLine();
+    while (true)
+    {
+      if (comment.length() == 0)
+        p.println ("Comments cannot be empty");
+      else break;
+      p.println("Please write down the comments:");
+      comment = s.nextLine();;
+    }
+    Main.clearScreen();
+    return BookingDB.comments(index, rating, comment);
+  }
+
+  public static boolean showComments(){
+    p.println ("Please specify the index of the booking you wish to comment on:");
+    int index = s.nextInt();
+    Main.clearScreen();
+    return Query.seeComments(index);
   }
 }
