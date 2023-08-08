@@ -20,4 +20,7 @@ public class Listing {
   public String getAddress(){
     return this.address;
   }
+  public String getStatus(){
+    return this.status;
+  }
 }

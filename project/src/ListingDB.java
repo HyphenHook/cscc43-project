@@ -297,7 +297,26 @@ public class ListingDB {
       return;
     }
   }
-
+  public static void removeListing(int listingID)
+  {
+    System.out.println ("This will deactive your listing so it won't show on further searches!");
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "UPDATE Listing SET status = 'Inactive' WHERE listingID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt (1, listingID);
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+    }
+  }
   public static void showListings ()
   {
     if (list.isEmpty())
@@ -307,7 +326,7 @@ public class ListingDB {
     }
     for (Listing i: list)
     {
-      System.out.println(i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress());
+      System.out.println(i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress() + " | status: " + i.getStatus());
     }
   }
   public static Listing getListing (int listingID)
