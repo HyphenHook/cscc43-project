@@ -1,7 +1,6 @@
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-
 public class ListingDB {
   private static ArrayList<Listing> list;
   public static Listing addListing (String address, String type)
@@ -217,6 +216,33 @@ public class ListingDB {
     {
       e.printStackTrace();
       return false;
+    }
+  }
+
+  public static void seeAvailability (int listingID){
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT * FROM Availability WHERE listingID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, listingID);
+        ResultSet r = s.executeQuery();
+        if(!r.next()){
+          System.out.println("This listing has no availability.");
+        } else {
+          System.out.println("Listing ID: " + listingID);
+          while (r.next())
+            System.out.println(r.getDate("date") + " | " + r.getString("status") + " | " + r.getDouble("price"));
+        }
+        r.close();
+        s.close();
+        con.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
     }
   }
   public static boolean removeAvailability (int listingID, Date date)

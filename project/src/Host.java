@@ -130,10 +130,11 @@ public class Host {
       ListingDB.showListings();
       p.println ("===========================");
       p.println ("0 - Add availability");
-      p.println ("1 - Change availability price");
-      p.println ("2 - Remove availability");
-      p.println ("3 - Add amenities");
-      p.println ("4 - Back");
+      p.println ("1 - See Availability");
+      p.println ("2 - Change availability price");
+      p.println ("3 - Remove availability");
+      p.println ("4 - Add amenities");
+      p.println ("5 - Back");
       p.println ("===========================");
       p.println ("Please select:");
       input = s.nextInt();
@@ -150,6 +151,11 @@ public class Host {
         }
         case 1:
         {
+          seeAvailability();
+          break;
+        }
+        case 2:
+        {
           if(!changeAvailability()){
             p.println ("Failed to change availabilities");
           } else {
@@ -157,7 +163,7 @@ public class Host {
           }
           break;
         }
-        case 2:
+        case 3:
         {
           if(!removeAvailabilities()){
             p.println ("Failed to remove availabilities");
@@ -166,7 +172,7 @@ public class Host {
           }
           break;
         }
-        case 3:
+        case 4:
         {
           if(!addAmenities()){
             p.println ("Failed to add amenity");
@@ -175,7 +181,7 @@ public class Host {
           }
           break;
         }
-        case 4:
+        case 5:
         {
           Main.clearScreen();
           leave = true;
@@ -430,7 +436,7 @@ public class Host {
     while (true)
     {
       if (!ListingDB.checkRelation(User.getInstance().getID(), listingID))
-        p.println ("Cannot add availability to listing " + listingID + ". Please select a valid listingID");
+        p.println ("Cannot change availability of listing " + listingID + ". Please select a valid listingID");
       else break;
       p.println("Please enter the listingID:");
       listingID = s.nextInt();
@@ -484,6 +490,52 @@ public class Host {
     return result;
   }
 
+
+  public static void seeAvailability(){
+    s.nextLine();
+
+    //Enter the listingID
+    p.println("Please enter the listingID:");
+    int listingID = s.nextInt();
+    while (true)
+    {
+      if (!ListingDB.checkRelation(User.getInstance().getID(), listingID))
+        p.println ("Cannot check availability of listing " + listingID + ". Please select a valid listingID");
+      else break;
+      p.println("Please enter the listingID:");
+      listingID = s.nextInt();
+    }
+
+    Main.clearScreen();
+    int input = 0;
+    boolean leave = false;
+    while (true)
+    {
+      ListingDB.seeAvailability(listingID);;
+      p.println ("===========================");
+      p.println ("0 - Back");
+      p.println ("===========================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      switch (input)
+      {
+        case 0:
+        {
+          Main.clearScreen();
+          leave = true;
+          break;
+        }
+        default:
+        {
+          Main.clearScreen();
+          p.println ("Please select a valid option!");
+          break;
+        }
+      }
+      if (leave) break;
+    }
+  }
+
   public static boolean removeAvailabilities(){
     s.nextLine();
 
@@ -493,7 +545,7 @@ public class Host {
     while (true)
     {
       if (!ListingDB.checkRelation(User.getInstance().getID(), listingID))
-        p.println ("Cannot add availability to listing " + listingID + ". Please select a valid listingID");
+        p.println ("Cannot remove availability of listing " + listingID + ". Please select a valid listingID");
       else break;
       p.println("Please enter the listingID:");
       listingID = s.nextInt();
@@ -544,7 +596,7 @@ public class Host {
     while (true)
     {
       if (!ListingDB.checkRelation(User.getInstance().getID(), listingID))
-        p.println ("Cannot add availability to listing " + listingID + ". Please select a valid listingID");
+        p.println ("Cannot add avmenity to listing " + listingID + ". Please select a valid listingID");
       else break;
       p.println("Please enter the listingID:");
       listingID = s.nextInt();
