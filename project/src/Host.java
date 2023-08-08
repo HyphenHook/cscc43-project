@@ -598,55 +598,24 @@ public class Host {
     }
 
     //Enter the amenities
-    String[] choice = {
-      "Wifi",
-      "TV",
-      "Kitchen",
-      "Washer",
-      "Free parking on premises",
-      "Paid parking on premises",
-      "Air conditioning",
-      "Dedicated workspace",
-      "Pool",
-      "Hot tub",
-      "Patio",
-      "BBQ grill",
-      "Outdoor dining area",
-      "Fire pit",
-      "Pool table",
-      "Indoor fireplace",
-      "Piano",
-      "Exercise equipment",
-      "Lake access",
-      "Beach Access",
-      "ski-in/ski-out",
-      "Outdoor shower",
-      "Smoke alarm",
-      "First aid kit",
-      "Fire extinguisher",
-      "Carbon monoxide alarm"
-    };
-    for (int i = 0; i < choice.length; i++)
-    {
-      p.println(i + ". " + choice[i]);
-    }
     Listing list = ListingDB.getListing(listingID);
     if (list != null)
       ListingDB.suggestAmenities(list.getType(), listingID);
     p.println("Please enter the amenity:");
-    int amenity = s.nextInt();
+    s.nextLine();
+    String amenity = s.nextLine();
     while (true)
     {
-      if (amenity < 0 || amenity >= choice.length)
-        p.println ("Invalid amenity!");
+      if (amenity.isEmpty())
+        p.println ("Invalid amenity! It cannot be blank!");
       else break;
       p.println("Please enter the amenity:");
-      amenity = s.nextInt();
+      amenity = s.nextLine();
     }
 
 
     Main.clearScreen();
-    return ListingDB.addAmenities(listingID, choice[amenity]);
+    return ListingDB.addAmenities(listingID, amenity);
   }
 
   public static boolean cancelBookings(){

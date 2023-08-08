@@ -41,7 +41,7 @@ public class BookingDB {
     for (Book i:list)
     {
       System.out.println ("========================= " + j++ + " ========================");
-      System.out.println ("Listing: " + i.listingID);
+      System.out.println ("Address: " + i.address);
       System.out.println ("Date Booking Made: " + df.format(i.date));
       System.out.println ("Date Booked: " + df.format(i.startdate) + " - " + df.format(i.enddate));
       System.out.println ("Payment Card: ****" + i.card + " | " + "Total: $" + Math.round(i.total * 100.0) / 100.0);
@@ -85,7 +85,7 @@ public class BookingDB {
     for (Book i:list)
     {
       System.out.println ("========================= " + j++ + " ========================");
-      System.out.println("Address: " + i.address);
+      System.out.println("BookingID: " + i.bookingID);
       System.out.println("Date Made: " + i.date);
       System.out.println ("Price: $" + i.total);
       System.out.println ("Date Booked: " + df.format(i.startdate) + " - " + df.format(i.enddate));

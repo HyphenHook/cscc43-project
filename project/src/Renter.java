@@ -176,6 +176,11 @@ public class Renter {
     int input = s.nextInt();
     p.println ("====================================================");
     QueryListing i = Query.getQueryList(input);
+    if (i == null)
+    {
+      Main.clearScreen();
+      return;
+    }
     p.println("Choose payment!");
     String card = pickPayment();
     if (card == null)
