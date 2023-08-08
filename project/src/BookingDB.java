@@ -48,6 +48,50 @@ public class BookingDB {
       System.out.println ("Status: " + i.status);
     }
   }
+    //Fetch bookings for host
+  public static void fetchHostBookings ()
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT * FROM TheListings NATURAL JOIN Books WHERE userID = ? ORDER BY date DESC";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, User.getInstance().getID());
+        ResultSet r = s.executeQuery();
+        list = new ArrayList<>();
+        while (r.next())
+          list.add (new Book (r.getInt("bookingID"), r.getInt("listingID"), r.getDate("startdate"), r.getDate("enddate"), r.getString("status"), r.getDate("date"), r.getString("card"), r.getDouble("total"), ""));
+        r.close();
+        s.close();
+        con.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      return;
+    }
+  }
+
+  public static void showHostBookings()
+  {
+    if (list.isEmpty())
+    {
+      System.out.println ("You listings have no bookings!");
+      return;
+    }
+    int j = 0;
+    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+    for (Book i:list)
+    {
+      System.out.println ("========================= " + j++ + " ========================");
+      System.out.println("bookingID: " + i.bookingID);
+      System.out.println("listingID: " + i.listingID);
+      System.out.println ("Date Booked: " + df.format(i.startdate) + " - " + df.format(i.enddate));
+      System.out.println ("Status: " + i.status);
+    }
+  }
+
   public static boolean cancelAvailability (Book i)
   {
     try{
