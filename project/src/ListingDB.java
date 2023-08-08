@@ -34,6 +34,7 @@ public class ListingDB {
       return null;
     }
   }
+
   public static boolean addLocation (double latitude, double longitude, String postalcode, String address, String city, String country)
   {
     try{
@@ -279,7 +280,7 @@ public class ListingDB {
       Connection con = Connector.getConnection();
       if (con != null)
       {
-        String query = "SELECT * FROM TheListings NATURAL JOIN Listing WHERE userID = ?";
+        String query = "SELECT * FROM TheListings NATURAL JOIN Listing WHERE userID = ? AND status = 'Active'";
         PreparedStatement s = con.prepareStatement(query);
         s.setInt(1, User.getInstance().getID());
         ResultSet r = s.executeQuery();
@@ -298,6 +299,27 @@ public class ListingDB {
     }
   }
 
+  public static void removeListing(int listingID)
+  {
+    System.out.println ("This will deactive your listing so it won't show on further searches!");
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "UPDATE Listing SET status = 'Inactive' WHERE listingID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt (1, listingID);
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
   public static void showListings ()
   {
     if (list.isEmpty())
@@ -308,7 +330,9 @@ public class ListingDB {
     int j = 0;
     for (Listing i: list)
     {
-      System.out.println(j++ + ". " + i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress());
+
+      System.out.println(i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress() + " | status: " + i.getStatus());
+
     }
   }
   public static Listing getListing (int listingID)

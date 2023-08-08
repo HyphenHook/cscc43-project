@@ -149,7 +149,8 @@ public class Host {
       p.println ("2 - Change availability price");
       p.println ("3 - Remove availability");
       p.println ("4 - Add amenities");
-      p.println ("5 - Back");
+      p.println ("5 - Remove Listing");
+      p.println ("6 - Back");
       p.println ("===========================");
       p.println ("Please select:");
       input = s.nextInt();
@@ -198,6 +199,11 @@ public class Host {
         }
         case 5:
         {
+          removeListing();
+          break;
+        }
+        case 6:
+        {
           Main.clearScreen();
           leave = true;
           break;
@@ -212,7 +218,23 @@ public class Host {
       if (leave) break;
     }
   }
+  public static void removeListing(){
+    s.nextLine();
 
+    //Enter the listingID
+    p.println("Please enter the listingID:");
+    int listingID = s.nextInt();
+    while (true)
+    {
+      if (!ListingDB.checkRelation(User.getInstance().getID(), listingID))
+        p.println ("You don't own listing " + listingID + ". Please select a valid listingID");
+      else break;
+      p.println("Please enter the listingID:");
+      listingID = s.nextInt();
+    }
+    ListingDB.removeListing(listingID);
+    p.println("Listing successfully removed from public!");
+  }
   public static void printTypeSelection(){
     p.println("Select type of the listing:");
     p.println ("1 - Apartment");

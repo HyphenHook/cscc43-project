@@ -7,10 +7,10 @@ public class Report {
             Connection con = Connector.getConnection();
             if (con != null)
             {
-                String sqlQuery = "SELECT city, COUNT(bookingID) as count FROM LocationInfo NATURAL JOIN Listing NATURAL JOIN Books "
-                    + "WHERE status = 'Booked' AND startdate >= ? AND startdate <= ? GROUP BY city";
-                String sql2 = "SELECT postalcode, COUNT(bookingID) as count FROM LocationInfo NATURAL JOIN Listing NATURAL JOIN Books "
-                    + "WHERE city = ? AND status = 'Booked' AND startdate >= ? AND startdate <= ? GROUP BY postalcode";
+                String sqlQuery = "SELECT city, COUNT(bookingID) as count FROM LocationInfo NATURAL JOIN Listing INNER JOIN Books ON Listing.listingID = Books.listingID "
+                    + "WHERE Books.status <> 'Canceled' AND startdate >= ? AND startdate <= ? GROUP BY city";
+                String sql2 = "SELECT postalcode, COUNT(bookingID) as count FROM LocationInfo NATURAL JOIN Listing INNER JOIN Books ON Listing.listingID = Books.listingID "
+                    + "WHERE city = ? AND Books.status <> 'Canceled' AND startdate >= ? AND startdate <= ? GROUP BY postalcode";
 
 
                 if(!inCity) {

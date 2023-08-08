@@ -10,7 +10,7 @@ public class Main {
   private static final String EMAIL_PATTERN =
             "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
   public static void main(String[] args) {
-    Connector.setInstance("jdbc:mysql://localhost:3306/mybnb", "root", "");
+    Connector.setInstance("jdbc:mysql://localhost:3306/mybnb", "root", "204x78y69");
     clearScreen();
     authMenu();
   }

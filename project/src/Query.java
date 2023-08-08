@@ -26,9 +26,11 @@ public class Query {
         }
         else if (f.addr)
         {
-          query = "CREATE VIEW t1 AS SELECT Listing.*, LocationInfo.postalcode, LocationInfo.city, LocationInfo.country FROM Listing INNER JOIN LocationInfo ON Listing.address = LocationInfo.address WHERE status = 'Active' AND LocationInfo.address = ?";
+          query = "CREATE VIEW t1 AS SELECT Listing.*, LocationInfo.postalcode, LocationInfo.city, LocationInfo.country FROM Listing INNER JOIN LocationInfo ON Listing.address = LocationInfo.address WHERE status = 'Active' AND (LocationInfo.address LIKE ? OR LocationInfo.country LIKE ? OR LocationInfo.city LIKE ?)";
           s = con.prepareStatement(query);
-          s.setString (1, f.address);
+          s.setString (1, "%" + f.address + "%");
+          s.setString (2, "%" + f.address + "%");
+          s.setString (3, "%" + f.address + "%");
           s.executeUpdate();
           s.close();
         }

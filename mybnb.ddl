@@ -228,7 +228,7 @@ CREATE TABLE Books (
   status VARCHAR(20) NOT NULL,
   card VARCHAR(4) NOT NULL,
   date DATE NOT NULL,
-  total double NOT NULL,
+  total DOUBLE NOT NULL,
   FOREIGN KEY (listingID) REFERENCES Listing (listingID)
 );
 
