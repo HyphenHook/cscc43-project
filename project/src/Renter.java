@@ -35,10 +35,6 @@ public class Renter {
         }
         case 3:
         {
-          break;
-        }
-        case 4:
-        {
           Main.clearScreen();
           leave = true;
           break;
@@ -60,8 +56,7 @@ public class Renter {
     p.println ("0 - Show My Bookings");
     p.println ("1 - Search Listings to Book");
     p.println ("2 - Show Payment Methods");
-    p.println ("3 - Show Reports");
-    p.println ("4 - Back");
+    p.println ("3 - Back");
     p.println ("===========================");
     p.println ("Please select:");
   }
@@ -169,6 +164,99 @@ public class Renter {
     }
     displaySearch(f);
   }
+  public static void displayDetails ()
+  {
+    p.println("Choose the index of the listing!");
+    int input = s.nextInt();
+    p.println ("====================================================");
+    Query.showDetailQuery(input);
+  }
+  public static void quickBook(){
+    p.println("Choose the index of the listing!");
+    int input = s.nextInt();
+    p.println ("====================================================");
+    QueryListing i = Query.getQueryList(input);
+    p.println("Choose payment!");
+    String card = pickPayment();
+    if (card == null)
+    {
+      p.println("Something gone wrong!");
+      return;
+    }
+    else
+    {
+      BookingDB.bookAvailability(i.listingID, i.startdate, i.enddate);
+      int bID = BookingDB.makeBooking(i.listingID, i.startdate, i.enddate, card, i.total);
+      BookingDB.linkBookingUser(bID);
+      p.println ("Booking succeeded!");
+    }
+  }
+  public static String pickPayment(){
+    int input = 0;
+    boolean leave = false;
+    String card = null;
+    while (true)
+    {
+      PaymentDB.fetchPaymentMethods ();
+      p.println ("===========================");
+      p.println ("=     Payment Methods     =");
+      p.println ("===========================");
+      PaymentDB.showPaymentMethods();
+      p.println ("===========================");
+      p.println ("0 - Add Credit/Debit Card");
+      p.println ("1 - Remove Credit/Debit Card");
+      p.println ("2 - Use Credit/Debit Card");
+      p.println ("3 - Back");
+      p.println ("===========================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      switch (input)
+      {
+        case 0:
+        {
+          if (!addCreditCard())
+            p.println ("Failed to add card!");
+          else
+            p.println ("Card added successfully!");
+          break;
+        }
+        case 1:
+        {
+          if (!removeCreditCard())
+            p.println ("Failed to remove card!");
+          else
+            p.println ("Card removed successfully!");
+          break;
+        }
+        case 2:
+        {
+          card = useCreditCard();
+          if (card != null) leave = true;
+          break;
+        }
+        case 3:
+        {
+          Main.clearScreen();
+          leave = true;
+          break;
+        }
+        default:
+        {
+          Main.clearScreen();
+          p.println ("Please select a valid option!");
+          break;
+        }
+      }
+      if (leave) break;
+    }
+    return card;
+  }
+  public static String useCreditCard(){
+    p.println ("Please specify the index of the card you wish to use:");
+    int index = s.nextInt();
+    Main.clearScreen();
+    return PaymentDB.useCreditCard(index);
+  }
   public static void displaySearch (Filter f)
   {
     Main.clearScreen();
@@ -192,10 +280,13 @@ public class Renter {
       {
         case 0:
         {
+          displayDetails();
           break;
         }
         case 1:
         {
+          quickBook();
+          leave = true;
           break;
         }
         case 2:
@@ -353,7 +444,6 @@ public class Renter {
       name = s.nextLine();
     }
     int result = PaymentDB.addCreditCard(card, expiry, name);
-    p.println(result);
     Main.clearScreen();
     return PaymentDB.linkCardWithUser (result);
   }

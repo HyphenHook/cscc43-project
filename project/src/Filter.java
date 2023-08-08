@@ -122,14 +122,14 @@ public class Filter {
   public void getPostal()
   {
     p.println ("===========================");
-    p.println("Please enter the postal code (6 character):");
+    p.println("Please enter the postal code:");
     s.nextLine();
     postalcode = s.nextLine();
     while (true)
     {
-      if (postalcode.length() == 6)
+      if (postalcode.length() > 3)
         break;
-      p.println("Please enter the postal code (6 character):");
+      p.println("Please enter the postal code:");
       postalcode = s.nextLine();
     }
     postal = true;

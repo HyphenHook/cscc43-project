@@ -41,7 +41,7 @@ public class BookingDB {
     for (Book i:list)
     {
       System.out.println ("========================= " + j++ + " ========================");
-      System.out.println ("Address: " + i.address);
+      System.out.println ("Listing: " + i.listingID);
       System.out.println ("Date Booking Made: " + df.format(i.date));
       System.out.println ("Date Booked: " + df.format(i.startdate) + " - " + df.format(i.enddate));
       System.out.println ("Payment Card: ****" + i.card + " | " + "Total: $" + Math.round(i.total * 100.0) / 100.0);
@@ -85,13 +85,37 @@ public class BookingDB {
     for (Book i:list)
     {
       System.out.println ("========================= " + j++ + " ========================");
-      System.out.println("bookingID: " + i.bookingID);
-      System.out.println("listingID: " + i.listingID);
+      System.out.println("Address: " + i.address);
+      System.out.println("Date Made: " + i.date);
+      System.out.println ("Price: $" + i.total);
       System.out.println ("Date Booked: " + df.format(i.startdate) + " - " + df.format(i.enddate));
       System.out.println ("Status: " + i.status);
     }
   }
-
+  public static boolean bookAvailability (int listingID, Date start, Date end)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "UPDATE Availability SET status = 'Booked' WHERE listingID = ? AND date BETWEEN ? AND ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt (1, listingID);
+        s.setDate (2, start);
+        s.setDate (3, end);
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+        return success;
+      }
+      return false;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
   public static boolean cancelAvailability (Book i)
   {
     try{
@@ -156,5 +180,62 @@ public class BookingDB {
       return false;
     }
     return (cancelBook (list.get(index).bookingID) && cancelAvailability(list.get(index)));
+  }
+  public static boolean linkBookingUser (int bookingID)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "INSERT INTO TheBookings(userID, bookingID) VALUES (?, ?)";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, User.getInstance().getID());
+        s.setInt(2, bookingID);
+        boolean success = s.executeUpdate() >= 1;
+        s.close();
+        con.close();
+        return success;
+      }
+      return false;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
+  public static int makeBooking (int listingID, Date start, Date end, String card, double total)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "INSERT INTO Books (listingID, startdate, enddate, status, card, date, total) VALUES (?, ?, ?, ?, ?, CURDATE(), ?)";
+        PreparedStatement s = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        s.setInt(1, listingID);
+        s.setDate(2, start);
+        s.setDate(3, end);
+        s.setString(4, "Booked");
+        s.setString(5, card);
+        s.setDouble(6, total);
+        int success = -1;
+        if (s.executeUpdate() >= 1)
+        {
+          ResultSet r = s.getGeneratedKeys();
+          if (r.next())
+            success = r.getInt(1);
+          r.close();
+        }
+        s.close();
+        con.close();
+        return success;
+      }
+      return -1;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return -1;
+    }
   }
 }

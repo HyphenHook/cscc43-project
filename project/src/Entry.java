@@ -42,7 +42,6 @@ public class Entry {
         {
           Main.clearScreen();
           p.println("Goodbye!");
-          reportTotalBooking();
           break;
         }
         case 5:
@@ -100,6 +99,7 @@ public class Entry {
       p.println ("================================");
       p.println ("Please select:");
       input = s.nextInt();
+      Main.clearScreen();
       switch (input)
       {
         case 0:
@@ -152,6 +152,7 @@ public class Entry {
   public static LocalDate enterStartDate(){
     try {
       System.out.println ("Please enter the startdate in the format of mm/dd/yyyy:");
+      s.nextLine();
       String date = s.nextLine().trim();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
       return LocalDate.parse(date, formatter);

@@ -45,6 +45,7 @@ public class Host {
           leave = true;
           break;
         }
+
         default:
         {
           Main.clearScreen();
@@ -62,7 +63,7 @@ public class Host {
     p.println ("0 - Show My Bookings");
     p.println ("1 - Show My Listings");
     p.println ("2 - Create new Listings");
-    p.println ("4 - Back");
+    p.println ("3 - Back");
     p.println ("===========================");
     p.println ("Please select:");
   }
@@ -151,7 +152,7 @@ public class Host {
         case 2:
         {
           if(!changeAvailability()){
-            p.println ("Failed to change availabilities");
+            p.println ("Failed to change availabilities! Most likely due to it being booked!");
           } else {
             p.println ("Availabilities changed successfully!");
           }
@@ -160,7 +161,7 @@ public class Host {
         case 3:
         {
           if(!removeAvailabilities()){
-            p.println ("Failed to remove availabilities");
+            p.println ("Failed to remove availabilities! Most likely due to it being booked!");
           } else {
             p.println ("Availabilities removed successfully!");
           }
@@ -194,9 +195,9 @@ public class Host {
 
   public static void printTypeSelection(){
     p.println("Select type of the listing:");
-    p.println ("1 - An entire place");
-    p.println ("2 - A room");
-    p.println ("3 - A shared room");
+    p.println ("1 - Apartment");
+    p.println ("2 - Condo");
+    p.println ("3 - House");
   }
 
   public static boolean addListing(){
@@ -249,6 +250,7 @@ public class Host {
 
       //Enter postal code
       p.println("Please enter the postal code:");
+      s.nextLine();
       String postal = s.nextLine();
       while (true)
       {
@@ -336,9 +338,9 @@ public class Host {
 
   public static LocalDate enterStartDate(){
     try {
-      s.nextLine();
       System.out.println ("Please enter the startdate in the format of mm/dd/yyyy:");
-      String date = s.nextLine().trim();
+      s.nextLine();
+      String date = s.nextLine();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
       return LocalDate.parse(date, formatter);
     } catch (DateTimeParseException e) {
@@ -349,9 +351,8 @@ public class Host {
 
   public static LocalDate enterEndDate(){
     try {
-      s.nextLine();
       System.out.println ("Please enter the enddate in the format of mm/dd/yyyy:");
-      String date = s.nextLine().trim();
+      String date = s.nextLine();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
       return LocalDate.parse(date, formatter);
     } catch (DateTimeParseException e) {
@@ -384,8 +385,6 @@ public class Host {
       startdate = enterStartDate();
     }
 
-    p.println(startdate);
-
     //Enter the endDate
     LocalDate enddate = enterEndDate();
     while (true)
@@ -394,17 +393,19 @@ public class Host {
         break;
       enddate = enterEndDate();
     }
-
+    Listing list = ListingDB.getListing(listingID);
+    if (list != null)
+      ListingDB.suggestPrice(startdate, enddate, list.getType());
     //Enter the price
-    p.println("Please enter the price:");
-    int price = s.nextInt();
+    p.println("Please enter the price (for each day):");
+    double price = s.nextDouble();
     while (true)
     {
       if (price <= 0)
         p.println ("Price cannot be less than 0!");
       else break;
       p.println("Please enter the price:");
-      price = s.nextInt();
+      price = s.nextDouble();
     }
 
 
@@ -597,20 +598,55 @@ public class Host {
     }
 
     //Enter the amenities
+    String[] choice = {
+      "Wifi",
+      "TV",
+      "Kitchen",
+      "Washer",
+      "Free parking on premises",
+      "Paid parking on premises",
+      "Air conditioning",
+      "Dedicated workspace",
+      "Pool",
+      "Hot tub",
+      "Patio",
+      "BBQ grill",
+      "Outdoor dining area",
+      "Fire pit",
+      "Pool table",
+      "Indoor fireplace",
+      "Piano",
+      "Exercise equipment",
+      "Lake access",
+      "Beach Access",
+      "ski-in/ski-out",
+      "Outdoor shower",
+      "Smoke alarm",
+      "First aid kit",
+      "Fire extinguisher",
+      "Carbon monoxide alarm"
+    };
+    for (int i = 0; i < choice.length; i++)
+    {
+      p.println(i + ". " + choice[i]);
+    }
+    Listing list = ListingDB.getListing(listingID);
+    if (list != null)
+      ListingDB.suggestAmenities(list.getType(), listingID);
     p.println("Please enter the amenity:");
-    String amenity = s.nextLine();
+    int amenity = s.nextInt();
     while (true)
     {
-      if (amenity.length() == 0)
-        p.println ("Invalid amenity, it's length cannot be 0!");
+      if (amenity < 0 || amenity >= choice.length)
+        p.println ("Invalid amenity!");
       else break;
       p.println("Please enter the amenity:");
-      amenity = s.nextLine();
+      amenity = s.nextInt();
     }
 
 
     Main.clearScreen();
-    return ListingDB.addAmenities(listingID, amenity);
+    return ListingDB.addAmenities(listingID, choice[amenity]);
   }
 
   public static boolean cancelBookings(){

@@ -13,7 +13,7 @@ public class Availability {
   }
   public String getStatus()
   {
-    return this.getStatus();
+    return this.status;
   }
   public Date getDate(){
     return this.date;

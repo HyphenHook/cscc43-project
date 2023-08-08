@@ -161,4 +161,21 @@ public class Query {
       System.out.println ("Amenities: " + i.amenities.toString());
     }
   }
+  public static void showDetailQuery (int index)
+  {
+    if (list.isEmpty())
+      System.out.println ("No result!");
+    if (index < 0 || index >= list.size())
+      System.out.println ("No entry at that index!");
+    ListingDB.seeAvailability(list.get(index).listingID);
+  }
+  public static QueryListing getQueryList(int index)
+  {
+    if (index < 0 || index >= list.size())
+    {
+      System.out.println ("No entry at that index!");
+      return null;
+    }
+    return list.get(index);
+  }
 }

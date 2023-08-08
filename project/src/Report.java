@@ -8,9 +8,9 @@ public class Report {
             if (con != null)
             {
                 String sqlQuery = "SELECT city, COUNT(bookingID) as count FROM LocationInfo NATURAL JOIN Listing NATURAL JOIN Books "
-                    + "WHERE status = 'book' AND startdate >= ? AND startdate <= ? GROUP BY city";
+                    + "WHERE status = 'Booked' AND startdate >= ? AND startdate <= ? GROUP BY city";
                 String sql2 = "SELECT postalcode, COUNT(bookingID) as count FROM LocationInfo NATURAL JOIN Listing NATURAL JOIN Books "
-                    + "WHERE city = ? AND status = 'BOOK' AND startdate >= ? AND startdate <= ? GROUP BY postalcode";
+                    + "WHERE city = ? AND status = 'Booked' AND startdate >= ? AND startdate <= ? GROUP BY postalcode";
 
 
                 if(!inCity) {
