@@ -32,7 +32,6 @@ public class Host {
         }
         case 2:
         {
-          
           if(!addListing()){
             p.println ("Failed to add listing");
           } else {
@@ -302,19 +301,19 @@ public class Host {
       {
         case 1:
         {
-          type = "An entire place";
+          type = "Apartment";
           selected = true;
           break;
         }
         case 2:
         {
-          type = "A room";
+          type = "House";
           selected = true;
           break;
         }
         case 3:
         {
-          type = "A shared room";
+          type = "Condo";
           selected = true;
           break;
         }
@@ -336,6 +335,7 @@ public class Host {
 
   public static LocalDate enterStartDate(){
     try {
+      s.nextLine();
       System.out.println ("Please enter the startdate in the format of mm/dd/yyyy:");
       String date = s.nextLine().trim();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -348,6 +348,7 @@ public class Host {
 
   public static LocalDate enterEndDate(){
     try {
+      s.nextLine();
       System.out.println ("Please enter the enddate in the format of mm/dd/yyyy:");
       String date = s.nextLine().trim();
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");

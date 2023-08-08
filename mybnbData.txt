@@ -1,0 +1,170 @@
+INSERT INTO PersonalInfo (sin, name, address, birthdate, occupation)
+VALUES
+  ('123456789', 'John Doe', '123 Main St', '1990-05-15', 'Software Engineer'),
+  ('987654321', 'Jane Smith', '456 Elm St', '1985-08-22', 'Data Scientist'),
+  ('555555555', 'Michael Johnson', '789 Oak St', '1992-03-10', 'Student'),
+  ('999888777', 'Emily Brown', '567 Pine St', '1988-11-27', 'Teacher'),
+  ('444333222', 'Daniel Wilson', '890 Maple St', '1995-06-03', 'Artist'),
+  ('111111111', 'Alice Johnson', '111 Elm St', '1992-02-10', 'Graphic Designer'),
+  ('222222222', 'Bob Smith', '222 Maple St', '1987-06-15', 'Engineer'),
+  ('333333333', 'Eva Martinez', '333 Oak St', '1995-09-20', 'Student'),
+  ('444444444', 'Alex Brown', '444 Pine St', '1990-04-05', 'Marketing Manager'),
+  ('555555556', 'Sophia White', '555 Birch St', '1988-11-12', 'Teacher'),
+  ('666666666', 'Oliver Miller', '666 Cedar St', '1993-07-25', 'Web Developer'),
+  ('777777777', 'Emma Davis', '777 Walnut St', '1998-01-30', 'Student'),
+  ('888888888', 'Liam Anderson', '888 Spruce St', '1989-03-08', 'Business Analyst'),
+  ('999999999', 'Mia Wilson', '999 Fir St', '1991-12-18', 'Photographer'),
+  ('000000000', 'Noah Clark', '000 Pine St', '1997-10-07', 'Student');
+
+INSERT INTO User (sin, email, password)
+VALUES
+  ('123456789', 'john@example.com', 'password123'),
+  ('987654321', 'jane@example.com', 'securepass'),
+  ('555555555', 'michael@example.com', 'mypass456'),
+  ('999888777', 'emily@example.com', 'userpass789'),
+  ('444333222', 'daniel@example.com', 'secret123'),
+  ('111111111', 'alice@example.com', 'alicepass123'),
+  ('222222222', 'bob@example.com', 'bobsecurepass'),
+  ('333333333', 'eva@example.com', 'evapass456'),
+  ('444444444', 'alex@example.com', 'alexuserpass'),
+  ('555555556', 'sophia@example.com', 'sophiapass789'),
+  ('666666666', 'oliver@example.com', 'oliversecret'),
+  ('777777777', 'emma@example.com', 'emmauserpass'),
+  ('888888888', 'liam@example.com', 'liampassword'),
+  ('999999999', 'mia@example.com', 'miapass123'),
+  ('000000000', 'noah@example.com', 'noahsecret');
+
+INSERT INTO LocationInfo (latitude, longitude, postalcode, address, city, country)
+VALUES
+  (43.653225, -79.383186, 'M5V 2H1', '123 Main St', 'Toronto', 'Canada'),
+  (43.782564, -79.383093, 'M4S 2H6', '456 Elm St', 'Toronto', 'Canada'),
+  (43.646435, -79.379114, 'M6G 1L6', '789 Oak St', 'Toronto', 'Canada'),
+  (43.654613, -79.383345, 'M5V 3K9', '567 Pine St', 'Toronto', 'Canada'),
+  (43.667828, -79.389883, 'M5R 3P3', '890 Maple St', 'Toronto', 'Canada'),
+  (32.715736, -117.161087, '92101', '789 Ocean Ave', 'San Diego', 'USA'),
+  (49.2827, -123.1207, 'V6A 1L1', '123 Granville St', 'Vancouver', 'Canada'),
+  (43.6486, -79.3854, 'M5V 1R2', '456 Bay St', 'Toronto', 'Canada'),
+  (49.2827, -123.1207, 'V6A 1L1', '789 Granville St', 'Vancouver', 'Canada'),
+  (45.5048, -73.5772, 'H2X 3P8', '123 Saint-Catherine St', 'Montreal', 'Canada'),
+  (46.8139, -71.2080, 'G1K 7P4', '456 Grande Allée E', 'Quebec', 'Canada'),
+  (51.0447, -114.0719, 'T2P 1J9', '789 1st St SE', 'Calgary', 'Canada'),
+  (43.6532, -79.3832, 'M5G 2C2', '101 College St', 'Toronto', 'Canada'),
+  (49.2827, -123.1207, 'V6A 1L1', '222 Robson St', 'Vancouver', 'Canada'),
+  (45.5048, -73.5772, 'H2X 3P8', '333 Sherbrooke St E', 'Montreal', 'Canada'),
+  (46.8139, -71.2080, 'G1K 7P4', '444 Cartier St', 'Quebec', 'Canada'),
+  (51.0447, -114.0719, 'T2P 1J9', '555 5th Ave SW', 'Calgary', 'Canada'),
+  (43.6532, -79.3832, 'M5G 2C2', '666 Bay St', 'Toronto', 'Canada'),
+  (49.2827, -123.1207, 'V6A 1L1', '777 Granville St', 'Vancouver', 'Canada'),
+  (45.5048, -73.5772, 'H2X 3P8', '888 Saint-Catherine St', 'Montreal', 'Canada'),
+  (46.8139, -71.2080, 'G1K 7P4', '999 Grande Allée E', 'Quebec', 'Canada'),
+  (51.0447, -114.0719, 'T2P 1J9', '111 1st St SE', 'Calgary', 'Canada'),
+  (43.6532, -79.3832, 'M5G 2C2', '222 College St', 'Toronto', 'Canada'),
+  (49.2827, -123.1207, 'V6A 1L1', '333 Robson St', 'Vancouver', 'Canada'),
+  (45.5048, -73.5772, 'H2X 3P8', '444 Sherbrooke St E', 'Montreal', 'Canada'),
+  (46.8139, -71.2080, 'G1K 7P4', '555 Cartier St', 'Quebec', 'Canada'),
+  (51.0447, -114.0719, 'T2P 1J9', '666 5th Ave SW', 'Calgary', 'Canada'),
+  (43.6532, -79.3832, 'M5G 2C2', '777 Bay St', 'Toronto', 'Canada');
+
+INSERT INTO Listing (type, address, status)
+VALUES
+  ('Apartment', '123 Main St', 'Active'),
+  ('House', '456 Elm St', 'Active'),
+  ('Condo', '789 Oak St', 'Active'),
+  ('Apartment', '567 Pine St', 'Active'),
+  ('House', '890 Maple St', 'Active'),
+  ('Apartment', '789 Ocean Ave', 'Active'),
+  ('Apartment', '123 Granville St', 'Active'),
+  ('Apartment', '456 Bay St', 'Active'),
+  ('House', '789 Granville St', 'Active'),
+  ('Condo', '123 Saint-Catherine St', 'Active'),
+  ('Apartment', '456 Grande Allée E', 'Active'),
+  ('House', '789 1st St SE', 'Active'),
+  ('Apartment', '101 College St', 'Active'),
+  ('House', '222 Robson St', 'Active'),
+  ('Condo', '333 Sherbrooke St E', 'Active'),
+  ('Apartment', '444 Cartier St', 'Active'),
+  ('House', '555 5th Ave SW', 'Active'),
+  ('Apartment', '666 Bay St', 'Active'),
+  ('House', '777 Granville St', 'Active'),
+  ('Condo', '888 Saint-Catherine St', 'Active'),
+  ('Apartment', '999 Grande Allée E', 'Active'),
+  ('House', '111 1st St SE', 'Active'),
+  ('Apartment', '222 College St', 'Active'),
+  ('House', '333 Robson St', 'Active'),
+  ('Condo', '444 Sherbrooke St E', 'Active'),
+  ('Apartment', '555 Cartier St', 'Active'),
+  ('House', '666 5th Ave SW', 'Active'),
+  ('Apartment', '777 Bay St', 'Active');
+
+INSERT INTO TheListings (userID, listingID)
+VALUES
+  (1, 1), (2, 2), (2, 3), (4, 4), (5, 5), (1, 6),
+  (2, 7), (1, 8), (2, 9), (3, 10), (4, 11), (5, 12),
+  (6, 13), (7, 14), (8, 15), (9, 16), (10, 17),
+  (11, 18), (12, 19), (13, 20), (14, 21), (15, 22),
+  (1, 23), (2, 24), (3, 25), (4, 26), (5, 27), (6, 28);
+
+DROP PROCEDURE IF EXISTS InsertAvailabilityData;  
+
+DELIMITER |
+CREATE PROCEDURE InsertAvailabilityData()
+BEGIN
+  DECLARE currentDate DATE;
+  DECLARE endDate DATE;
+  DECLARE listingID INT;
+  DECLARE minPrice INT;
+  DECLARE maxPrice INT;
+  DECLARE randomPrice DOUBLE;
+  DECLARE randomStatus INT;
+  
+  SET currentDate = '2023-09-01';
+  SET endDate = '2023-12-01';
+  
+  WHILE currentDate <= endDate DO
+    SET listingID = 1; -- Set the initial listingID value
+    
+    WHILE listingID <= 28 DO
+      -- Determine the price range for the specific listing
+      SET minPrice = 100; -- Minimum price
+      SET maxPrice = 500; -- Maximum price
+      
+      -- Generate a random price within the range
+      SET randomPrice = FLOOR(RAND() * (maxPrice - minPrice + 1)) + minPrice;
+      
+      -- Generate a random status (0 for Unavailable, 1 for Available)
+      SET randomStatus = FLOOR(RAND() * 2);
+      
+      IF randomStatus = 0 THEN
+        INSERT INTO Availability (listingID, date, price, status)
+        VALUES (listingID, currentDate, 0, 'Unavailable');
+      ELSE
+        INSERT INTO Availability (listingID, date, price, status)
+        VALUES (listingID, currentDate, randomPrice, 'Available');
+      END IF;
+      
+      SET listingID = listingID + 1; -- Increment the listingID
+    END WHILE;
+    
+    SET currentDate = DATE_ADD(currentDate, INTERVAL 1 DAY); -- Increment the date
+  END WHILE;
+END;
+|
+DELIMITER ;
+
+CALL InsertAvailabilityData();
+
+INSERT INTO Amenities (name, listingID)
+VALUES
+  ('Wifi', 1), ('TV', 1), ('Kitchen', 1), ('Washer', 1),
+  ('Free parking on premises', 2), ('Paid parking on premises', 2), ('Air conditioning', 2), ('Dedicated workspace', 2),
+  ('Pool', 3), ('Hot tub', 3), ('Patio', 3), ('BBQ grill', 3),
+  ('Outdoor dining area', 4), ('Fire pit', 4), ('Pool table', 4), ('Indoor fireplace', 4),
+  ('Piano', 5), ('Exercise equipment', 5), ('Lake access', 5), ('Beach Access', 5),
+  ('ski-in/ski-out', 6), ('Outdoor shower', 6), ('Smoke alarm', 6), ('First aid kit', 6),
+  ('Fire extinguisher', 7), ('Carbon monoxide alarm', 7);
+
+
+
+
+
+
