@@ -189,6 +189,29 @@ public class ListingDB {
       return false;
     }
   }
+  public static void seeAvailability (int listingID){
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT * FROM Availability WHERE listingID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, listingID);
+
+        ResultSet r = s.executeQuery();
+        while (r.next())
+          System.out.println(r.getDate("date") + "  |  " + r.getDouble("price") + "  |  " + r.getString("status"));
+        r.close();
+        s.close();
+        con.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+    }
+  }
+
   public static boolean modifyAvailability (int listingID, Date date, double price)
   {
     try{
