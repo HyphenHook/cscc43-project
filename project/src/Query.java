@@ -161,4 +161,16 @@ public class Query {
       System.out.println ("Amenities: " + i.amenities.toString());
     }
   }
+
+  public static boolean seeComments (int index)
+  {
+    if (index >= list.size() || index < 0)
+    {
+      System.out.println ("The listing hasn't have comments yet.");
+      return false;
+    }
+    RatingDB.fetchRatingListing(list.get(index).listingID);
+    RatingDB.showRatings();
+    return true;
+  }
 }

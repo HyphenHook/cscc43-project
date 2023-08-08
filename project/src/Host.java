@@ -80,7 +80,9 @@ public class Host {
       BookingDB.showHostBookings();
       p.println ("===========================");
       p.println ("0 - Cancel Bookings");
-      p.println ("1 - Back");
+      p.println ("1 - Comments on Bookings");
+      p.println ("2 - See comments on the booking's renter");
+      p.println ("3 - Back");
       p.println ("===========================");
       p.println ("Please select:");
       input = s.nextInt();
@@ -95,6 +97,24 @@ public class Host {
           break;
         }
         case 1:
+        {
+          if(!commentOn()){
+            p.println("Failed to comment on booking!");
+          } else {
+            p.println("Comment on booking Successfully!");
+          }
+          break;
+        }
+        case 2:
+        {
+          if(!showComments()){
+            p.println("Failed to show comments");
+          } else {
+            p.println("Successfully show comments!");
+          }
+          break;
+        }
+        case 3:
         {
           Main.clearScreen();
           leave = true;
@@ -194,9 +214,9 @@ public class Host {
 
   public static void printTypeSelection(){
     p.println("Select type of the listing:");
-    p.println ("1 - An entire place");
-    p.println ("2 - A room");
-    p.println ("3 - A shared room");
+    p.println ("1 - Apartment");
+    p.println ("2 - House");
+    p.println ("3 - Condo");
   }
 
   public static boolean addListing(){
@@ -618,6 +638,40 @@ public class Host {
     int index = s.nextInt();
     Main.clearScreen();
     return BookingDB.cancelBooking(index);
+  }
+
+  public static boolean commentOn(){
+    p.println ("Please specify the index of the booking you wish to comment on:");
+    int index = s.nextInt();
+    p.println("Please specify the rating you want to give from 0 to 10 in integer form:");
+    int rating = s.nextInt();
+    while (true)
+    {
+      if (rating < 0 || rating > 5)
+        p.println ("Invalid rating!");
+      else break;
+      p.println("Please specify the rating you want to give from 0 to 10 in integer form:");
+      rating = s.nextInt();
+    }
+    p.println("Please write down the comments:");
+    String comment = s.nextLine();
+    while (true)
+    {
+      if (comment.length() == 0)
+        p.println ("Comments cannot be empty");
+      else break;
+      p.println("Please write down the comments:");
+      comment = s.nextLine();;
+    }
+    Main.clearScreen();
+    return BookingDB.comments(index, rating, comment);
+  }
+
+  public static boolean showComments(){
+    p.println ("Please specify the index of the booking you wish to comment on:");
+    int index = s.nextInt();
+    Main.clearScreen();
+    return BookingDB.seeComments(index);
   }
   
 }

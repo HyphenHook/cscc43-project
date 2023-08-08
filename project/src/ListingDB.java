@@ -296,9 +296,10 @@ public class ListingDB {
       System.out.println ("You have no listings.");
       return;
     }
+    int j = 0;
     for (Listing i: list)
     {
-      System.out.println(i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress());
+      System.out.println(j++ + ". " + i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress());
     }
   }
 
@@ -371,4 +372,6 @@ public class ListingDB {
         return false;
     }
   }
+
+
 }

@@ -9,7 +9,9 @@ public class Book {
   public String card;
   public double total;
   public String address;
-  public Book (int bookingID, int listingID, Date startdate, Date enddate, String status, Date date, String card, double total, String address)
+  public boolean isRenter;
+  public Book (int bookingID, int listingID, Date startdate, Date enddate, String status, Date date, String card, double total, 
+                String address, boolean isRenter)
   {
     this.address = address;
     this.bookingID = bookingID;
@@ -20,6 +22,7 @@ public class Book {
     this.date = date;
     this.card = card;
     this.total = total;
+    this.isRenter = isRenter;
   }
 
 }

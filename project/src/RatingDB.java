@@ -62,6 +62,34 @@ public class RatingDB {
     }
   }
 
+  public static int getRenter(int listingID){
+    int answer = 0;
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT * FROM TheBookings WHERE listingID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, listingID);
+        ResultSet r = s.executeQuery();
+
+        if (r.next())
+        {
+          answer = r.getInt("userID");
+        }
+        s.close();
+        con.close();
+        return answer;
+      }
+      return answer;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return answer;
+    }
+  }
+
   public static boolean checkComplete(int bookingID){
     try{
       Connection con = Connector.getConnection();
@@ -137,10 +165,9 @@ public class RatingDB {
       Connection con = Connector.getConnection();
       if (con != null)
       {
-        String query = "SELECT * FROM RenterRates NATURAL JOIN Rating WHERE listingID = ? AND hostID = ?";
+        String query = "SELECT * FROM RenterRates NATURAL JOIN Rating WHERE listingID = ?";
         PreparedStatement s = con.prepareStatement(query);
         s.setInt(1, listingID);
-        s.setInt(2, User.getInstance().getID());
         ResultSet r = s.executeQuery();
         list = new ArrayList<>();
         while (r.next())
@@ -156,14 +183,14 @@ public class RatingDB {
     }
   }
 
-  public static void fetchRatingRenter(){
+  public static void fetchRatingRenter(int bookingID){
     try{
       Connection con = Connector.getConnection();
       if (con != null)
       {
         String query = "SELECT * FROM HostRates NATURAL JOIN Rating WHERE renterID = ?";
         PreparedStatement s = con.prepareStatement(query);
-        s.setInt(1, User.getInstance().getID());
+        s.setInt(1, getRenter(bookingID));
         ResultSet r = s.executeQuery();
         list = new ArrayList<>();
         while (r.next())
@@ -183,7 +210,7 @@ public class RatingDB {
   {
     if (list.isEmpty())
     {
-      System.out.println ("You have not been rated.");
+      System.out.println ("Have not been rated yet");
       return;
     }
     System.out.println("========            Ratings           ========");

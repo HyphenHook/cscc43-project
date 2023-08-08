@@ -18,7 +18,8 @@ public class BookingDB {
         ResultSet r = s.executeQuery();
         list = new ArrayList<>();
         while (r.next())
-          list.add (new Book (r.getInt("bookingID"), r.getInt("listingID"), r.getDate("startdate"), r.getDate("enddate"), r.getString("status"), r.getDate("date"), r.getString("card"), r.getDouble("total"), r.getString("address")));
+          list.add (new Book (r.getInt("bookingID"), r.getInt("listingID"), r.getDate("startdate"), r.getDate("enddate"), r.getString("status"), r.getDate("date"), r.getString("card"), r.getDouble("total"), 
+                                r.getString("address"), true));
         r.close();
         s.close();
         con.close();
@@ -61,7 +62,8 @@ public class BookingDB {
         ResultSet r = s.executeQuery();
         list = new ArrayList<>();
         while (r.next())
-          list.add (new Book (r.getInt("bookingID"), r.getInt("listingID"), r.getDate("startdate"), r.getDate("enddate"), r.getString("status"), r.getDate("date"), r.getString("card"), r.getDouble("total"), ""));
+          list.add (new Book (r.getInt("bookingID"), r.getInt("listingID"), r.getDate("startdate"), 
+                                r.getDate("enddate"), r.getString("status"), r.getDate("date"), r.getString("card"), r.getDouble("total"), "", false));
         r.close();
         s.close();
         con.close();
@@ -156,5 +158,38 @@ public class BookingDB {
       return false;
     }
     return (cancelBook (list.get(index).bookingID) && cancelAvailability(list.get(index)));
+  }
+
+  public static boolean comments (int index, int rating, String text)
+  {
+    if (index >= list.size() || index < 0)
+    {
+      System.out.println ("You don't have a booking at that position!");
+      return false;
+    }
+    if (!(list.get(index).status.equals("Completed")))
+    {
+      System.out.println ("Cannot comment on it since the booking is not complete.");
+      return false;
+    }
+    boolean isRenter = list.get(index).isRenter;
+    int listingID = list.get(index).listingID;
+    Rating r = RatingDB.createComments(rating, text);
+    if(isRenter){
+      return RatingDB.addRates(r.ratingID, listingID, RatingDB.gethost(listingID), isRenter);
+    } else {
+      return RatingDB.addRates(r.ratingID, listingID, RatingDB.getRenter(listingID), isRenter);
+    }
+  }
+
+  public static boolean seeComments(int index){
+    if (index >= list.size() || index < 0)
+    {
+      System.out.println ("Invalid bookingID.");
+      return false;
+    }
+    RatingDB.fetchRatingListing(list.get(index).bookingID);
+    RatingDB.showRatings();
+    return true;
   }
 }
