@@ -35,10 +35,6 @@ public class Renter {
         }
         case 3:
         {
-          break;
-        }
-        case 4:
-        {
           Main.clearScreen();
           leave = true;
           break;
@@ -60,8 +56,7 @@ public class Renter {
     p.println ("0 - Show My Bookings");
     p.println ("1 - Search Listings to Book");
     p.println ("2 - Show Payment Methods");
-    p.println ("3 - Show Reports");
-    p.println ("4 - Back");
+    p.println ("3 - Back");
     p.println ("===========================");
     p.println ("Please select:");
   }
