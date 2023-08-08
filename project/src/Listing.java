@@ -14,4 +14,11 @@ public class Listing {
   {
     return this.listingID;
   }
+   public String getType(){
+    return this.type;
+  }
+
+  public String getAddress(){
+    return this.address;
+  }
 }

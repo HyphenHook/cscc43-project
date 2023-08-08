@@ -96,8 +96,8 @@ CREATE TABLE PaymentMethod (
 );
 
 CREATE TABLE LocationInfo (
-  latitude DOUBLE NOT NULL,
-  longitude DOUBLE NOT NULL,
+  latitude FLOAT NOT NULL,
+  longitude FLOAT NOT NULL,
   postalcode VARCHAR(10) NOT NULL,
   address VARCHAR(160) PRIMARY KEY,
   city VARCHAR(20) NOT NULL,
@@ -204,7 +204,7 @@ DELIMITER |
 CREATE TRIGGER Rating_trigger BEFORE INSERT ON Rating
 FOR EACH ROW BEGIN
 DECLARE msg VARCHAR(255);
-  IF NEW.rating < 0 OR NEW.rating > 10 THEN
+  IF NEW.rating < 0 OR NEW.rating > 5 THEN
     SET msg = 'Invalid rating violate!';
     SIGNAL sqlstate '45000' set message_text = msg;
   END IF;
@@ -259,7 +259,7 @@ FOR EACH ROW BEGIN
   IF NEW.enddate < CURDATE() AND NEW.status = 'Booked' THEN
     UPDATE Books
     SET status = 'Completed'
-    WHERE bookingID = NEW.bookingID
+    WHERE bookingID = NEW.bookingID;
   END IF;
 END;
 |

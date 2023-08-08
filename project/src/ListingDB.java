@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 public class ListingDB {
   private static ArrayList<Listing> list;
@@ -17,7 +18,7 @@ public class ListingDB {
         {
           ResultSet r = s.getGeneratedKeys();
           if (r.next())
-            list = new Listing(r.getInt("listingID"), type, address, "Active");
+            list = new Listing(r.getInt(1), type, address, "Active");
           r.close();
         }
         s.close();
@@ -83,6 +84,31 @@ public class ListingDB {
       return false;
     }
   }
+  public static boolean isLocationInactive (String address)
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT listingID FROM Listing WHERE address = ? AND status = 'Inactive'";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setString(1, address);
+        ResultSet r = s.executeQuery();
+        boolean success = r.next();
+        r.close();
+        s.close();
+        con.close();
+        return success;
+      }
+      return false;
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
   public static boolean addAmenities (int listingID, String amenity)
   {
     try{
@@ -212,6 +238,114 @@ public class ListingDB {
     {
       e.printStackTrace();
       return false;
+    }
+  }
+
+   public static void fetchListings ()
+  {
+    try{
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        String query = "SELECT * FROM TheListings NATURAL JOIN Listing WHERE userID = ?";
+        PreparedStatement s = con.prepareStatement(query);
+        s.setInt(1, User.getInstance().getID());
+        ResultSet r = s.executeQuery();
+        list = new ArrayList<>();
+        while (r.next())
+          list.add (new Listing(r.getInt("listingID"), r.getString("type"), 
+                                  r.getString("address"),r.getString("status")));
+        r.close();
+        s.close();
+        con.close();
+      }
+    }
+    catch (SQLException e)
+    {
+      return;
+    }
+  }
+
+  public static void showListings ()
+  {
+    if (list.isEmpty())
+    {
+      System.out.println ("You have no listings.");
+      return;
+    }
+    for (Listing i: list)
+    {
+      System.out.println(i.getID() + "   |   " + i.getType() + "  |  " + i.getAddress());
+    }
+  }
+
+  public static boolean checkRelation(int userID, int listingID){
+    try {
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        boolean result = false;
+        String sqlQuery = "SELECT * FROM TheListings WHERE userID = ? AND listingID = ?";
+        PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+        preparedStatement.setInt(1, userID);
+        preparedStatement.setInt(2, listingID);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            result = true;
+        } 
+
+        preparedStatement.close();
+        return result;
+      }
+      return false;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+  }
+
+  public static boolean checkAvailability(int listingID, LocalDate startDate, LocalDate endDate, boolean isBooked){
+    try {
+      Connection con = Connector.getConnection();
+      if (con != null)
+      {
+        boolean result = false;
+        String sqlQuery = "SELECT COUNT(*) AS count FROM Availability Where listingID = ? AND status = 'Available' AND date BETWEEN ? AND ?";
+        PreparedStatement preparedStatement = con.prepareStatement(sqlQuery);
+
+        int total = 0;
+        LocalDate Date = startDate;
+        while (!Date.isAfter(endDate)) {
+            Date = Date.plusDays(1);
+            total++;
+        }
+
+        preparedStatement.setInt(1, listingID);
+        preparedStatement.setDate(2, java.sql.Date.valueOf(startDate));
+        preparedStatement.setDate(3, java.sql.Date.valueOf(endDate));
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+          int count = resultSet.getInt("count");
+          if(isBooked){
+            if (count == total) {
+              result = true;
+            }
+          } else {
+            if (count == 0){
+              result = true;
+            }
+          }
+        } 
+
+        preparedStatement.close();
+        return result;
+      }
+      return false;
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
     }
   }
 }

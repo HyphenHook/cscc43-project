@@ -1,4 +1,5 @@
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.sql.*;
 import java.text.ParseException;
@@ -19,11 +20,12 @@ public class Renter {
       {
         case 0:
         {
-
+          showBookings();
           break;
         }
         case 1:
         {
+          searchListings();
           break;
         }
         case 2:
@@ -56,14 +58,212 @@ public class Renter {
     p.println ("=      Renter Service     =");
     p.println ("===========================");
     p.println ("0 - Show My Bookings");
-    p.println ("1 - Search Listings to Book ");
+    p.println ("1 - Search Listings to Book");
     p.println ("2 - Show Payment Methods");
     p.println ("3 - Show Reports");
     p.println ("4 - Back");
     p.println ("===========================");
     p.println ("Please select:");
   }
-
+  public static void searchListings(){
+    Main.clearScreen();
+    int input = 0;
+    boolean leave = false;
+    Filter f = new Filter(s, p);
+    while (true)
+    {
+      Main.clearScreen();
+      p.println ("===========================");
+      p.println ("=      Search Listing     =");
+      p.println ("===========================");
+      p.println ("Target Location: " + f.location);
+      p.println ("Target Date: " + f.dateRange);
+      p.println ("Target Amenities: " + f.amenities.toString());
+      p.println ("Target Price Range: " + f.priceRange);
+      p.println ("===========================");
+      p.println ("0 - Pick Location (coordinate, postal, or address)");
+      p.println ("1 - Pick Date Range");
+      p.println ("2 - Pick Amenities");
+      p.println ("3 - Pick Price Range");
+      p.println ("4 - Clear Filter");
+      p.println ("5 - Search");
+      p.println ("6 - Back");
+      p.println ("===========================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      switch (input)
+      {
+        case 0:
+        {
+          f.pickLocations();
+          break;
+        }
+        case 1:
+        {
+          f.getDates();
+          break;
+        }
+        case 2:
+        {
+          f.getAmenities();
+          break;
+        }
+        case 3:
+        {
+          f.getPrice();
+          break;
+        }
+        case 4:
+        {
+          f = new Filter(s, p);
+          break;
+        }
+        case 5:
+        {
+          requestSearch(f);
+          break;
+        }
+        case 6:
+        {
+          leave = true;
+          break;
+        }
+        default:
+        {
+          p.println ("Please select a valid option!");
+          break;
+        }
+      }
+      if (leave) 
+      {
+        Main.clearScreen();
+        break;
+      }
+    }
+  }
+  public static void requestSearch (Filter f)
+  {
+    int input = 0;
+    while (true)
+    {
+      boolean leave = true;
+      p.println ("===========================");
+      p.println ("=       Pick Ranking      =");
+      p.println ("===========================");
+      p.println ("0 - Ascending Cost");
+      p.println ("1 - Descending Cost");
+      if (f.coords)
+        p.println ("2 - Closest Distance");
+      p.println ("===========================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      if (input == 0) f.ranking = 0;
+      else if (input == 1) f.ranking = 1;
+      else if (f.coords && input == 2) f.ranking = 2;
+      else{
+        leave = false;
+        Main.clearScreen();
+        p.println ("Please select a valid option!");
+      }
+      if (leave) break;
+    }
+    displaySearch(f);
+  }
+  public static void displaySearch (Filter f)
+  {
+    Main.clearScreen();
+    int input = 0;
+    boolean leave = false;
+    while (true)
+    {
+      Query.fetchQuery(f);
+      p.println ("====================================================");
+      p.println ("=                   Search Results                 =");
+      p.println ("====================================================");
+      Query.showQuery();
+      p.println ("====================================================");
+      p.println ("0 - See Listing Details");
+      p.println ("1 - Quick book");
+      p.println ("2 - Back");
+      p.println ("====================================================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      switch (input)
+      {
+        case 0:
+        {
+          break;
+        }
+        case 1:
+        {
+          break;
+        }
+        case 2:
+        {
+          Main.clearScreen();
+          leave = true;
+          break;
+        }
+        default:
+        {
+          Main.clearScreen();
+          p.println ("Please select a valid option!");
+          break;
+        }
+      }
+      if (leave) break;
+    }
+  }
+  public static void showBookings(){
+    Main.clearScreen();
+    int input = 0;
+    boolean leave = false;
+    while (true)
+    {
+      BookingDB.fetchBookings();
+      p.println ("===========================");
+      p.println ("=       All Bookings      =");
+      p.println ("===========================");
+      BookingDB.showBookings();
+      p.println ("===========================");
+      p.println ("0 - Cancel a booking");
+      p.println ("1 - Back");
+      p.println ("===========================");
+      p.println ("Please select:");
+      input = s.nextInt();
+      switch (input)
+      {
+        case 0:
+        {
+          if (!cancelBooking())
+            p.println ("Failed to cancel a booking!");
+          else
+            p.println ("Successfully canceled the booking!");
+          break;
+        }
+        case 1:
+        {
+          Main.clearScreen();
+          leave = true;
+          break;
+        }
+        default:
+        {
+          Main.clearScreen();
+          p.println ("Please select a valid option!");
+          break;
+        }
+      }
+      if (leave) break;
+    }
+  }
+  public static boolean cancelBooking()
+  {
+    p.println ("Please specify the index of the booking you wish to cancel:");
+    int index = s.nextInt();
+    Main.clearScreen();
+    return BookingDB.cancelBooking(index);
+  }
   public static void showPayments(){
     Main.clearScreen();
     int input = 0;

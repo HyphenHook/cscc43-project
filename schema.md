@@ -44,18 +44,17 @@
   - Fire extinguisher 
   - Carbon monoxide alarm
   ```
-4. The available room types up-to-date are as follows:
+4. The available types are as follows:
   ```
-  - An entire place
-  - A room
-  - A shared room
+  - Apartment 
+  - House
+  - Condo
   ```
 5. Comments are part of the Rating
 6. All host listing informations are valid locations.
 7. For the reports of the number of bookings in a specific time period, bookings are included inside the time period whenever it has a date inside the period.
-8. The types of status for availability are yes (ready for booking), no (not ready for booking) and book (already booked).
-9. Address for a specific listing also includes the floor number if its an appartment.
-10. Each booking is paid with a single card.
+8. Address for a specific listing also includes the floor number if its an appartment.
+9. Each booking is paid with a single card.
 
 ## Normalization - 3NF
 ***User*** (<ins>userID</ins>, name, address, birthdate, occupation, SIN, email, password)  
